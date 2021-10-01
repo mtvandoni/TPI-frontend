@@ -1,23 +1,37 @@
+import React from 'react';
+import './App.css';
+import Header from './components/header/Header';
+import Login from './pages/login/Login';
 
-import Header from './components/Header/Header';
-import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
-import { createTheme } from '@material-ui/core/styles';
 const App = () => {
+  
+  React.useEffect(() => {
+    fetch("https://localhost:44311/api/persona", {
+      method: "GET",
+      headers: {
+          "Content-Type": "text/plain",
+
+      },
+    })
+      .then(res => res.json())
+      .then(
+        (result) => {
+          console.log(result);
+        },
+        // Nota: es importante manejar errores aquí y no en 
+        // un bloque catch() para que no interceptemos errores
+        // de errores reales en los componentes.
+        (error) => {
+          console.log(error);
+        }
+    )
+  }, []);
+
   return (
-    <MuiThemeProvider  theme={theme}><Header /></MuiThemeProvider >
-    
+    <div>
+      <Header />
+    </div>
   );
 }
-
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: '#e9c46a'
-    },
-    secondary: {
-      main: '#2a9d8f'
-    }
-  }
-});
 
 export default App;

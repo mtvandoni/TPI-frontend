@@ -23,7 +23,10 @@ const theme = createTheme({
     },
     default: {
       light: '#F8F8F8'
-    }
+    },
+    text: {
+      primary: '#232b2e',
+    },
   },
 })
 export default theme
