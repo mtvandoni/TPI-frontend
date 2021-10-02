@@ -1,9 +1,6 @@
 import React from 'react';
-import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -14,7 +11,7 @@ const Login = () => {
 
 
   return(
-    <Container component="main" maxWidth="xl"  style={{ background: `url('${process.env.PUBLIC_URL}/backImage.png') no-repeat center`}}>
+    <Container component="main" maxWidth="xl"  style={{ background: `url('${process.env.PUBLIC_URL}/backImage2.png') no-repeat center`}}>
       <Box
         sx={{
           marginTop: 8,
@@ -23,7 +20,7 @@ const Login = () => {
           alignItems: 'center',
           textAlign: 'center',
         }}
-        style={{backdropFilter: 'blur(2px)' }}
+        style={{backdropFilter: 'blur(2px)', height: '100vh' }}
       >
         <Typography component="h3" variant="h3" style={{ marginBottom: '1em', fontWeight: '500'}}>
           Bienvenidx!
@@ -31,7 +28,7 @@ const Login = () => {
         <Typography component="h4" variant="h4" style={{ marginBottom: '1em', fontWeight: '300', width: '20em'}}>
         Por favor ingrese su email y contraseña para loguearse a la plataforma
         </Typography>
-        <Box component="form" noValidate sx={{ mt: 1 }}>
+        <Box component="form" sx={{ mt: 1 }}>
           <TextField
             margin="normal"
             required

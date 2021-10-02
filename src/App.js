@@ -5,7 +5,7 @@ import Login from './pages/login/Login';
 
 const App = () => {
   
-  React.useEffect(() => {
+ /* React.useEffect(() => {
     fetch("https://localhost:44311/api/persona", {
       method: "GET",
       headers: {
@@ -25,7 +25,7 @@ const App = () => {
           console.log(error);
         }
     )
-  }, []);
+  }, []); */
 
   return (
     <div>
