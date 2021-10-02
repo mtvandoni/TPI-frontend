@@ -6,6 +6,7 @@ import {
   Link
 } from "react-router-dom";
 import Login from '../../pages/login/Login';
+import Home from '../../pages/home/Home';
 
 import './header.css';
 import AppBar from '@mui/material/AppBar';
@@ -52,6 +53,7 @@ const Header = () => {
             <Login />
           </Route>
           <Route path="/home">
+            <Home />
           </Route>
           <Route path="/novedades">
           </Route>
