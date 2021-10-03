@@ -1,19 +1,32 @@
 import * as React from 'react';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
+import {
+  Card,
+  CardActions,
+  CardContent,
+  CardMedia,
+  Typography,
+  Drawer,
+  Box,
+  Tooltip,
+  IconButton } from '@mui/material';
+  import FavoriteIcon from '@mui/icons-material/Favorite';
+  import ReadMoreIcon from '@mui/icons-material/ReadMore';
+  import ChatIcon from '@mui/icons-material/Chat';
 import './card.css';
 
 const CardCustom = () => {
+  const [openDrawer, setOpenDrawer ] = React.useState(false);
+
+  const toggleDrawer = (open) => (event) => {
+    setOpenDrawer(open);
+  };
+
   return(
     <div>
-      <Card sx={{ maxWidth: 250, borderRadius: '15px', marginTop: '2em', position: 'relative' }}>
+      <Card sx={{ maxWidth: 300, borderRadius: '15px', marginTop: '2em', position: 'relative' }}>
         <CardMedia
           component="img"
-          height="150"
+          height="250"
           image="https://upload.wikimedia.org/wikipedia/commons/8/8b/Australia_green_tree_frog_%28Litoria_caerulea%29_crop.jpg"
           alt="green iguana"
         />
@@ -28,10 +41,42 @@ const CardCustom = () => {
           <div className="badge">Fintech</div>
         </CardContent>
         <CardActions>
-          <Button size="small">Share</Button>
-          <Button size="small">Learn More</Button>
+          <div style={{flexGrow: 1 }} >
+          <Tooltip title="Me gusta">
+            <IconButton style={{marginRight: '1em'}}><FavoriteIcon/></IconButton>
+            </Tooltip>
+            <Tooltip title="Comentarios">
+              <IconButton><ChatIcon/></IconButton>
+            </Tooltip>
+          </div>
+          <div style={{flexGrow: 1 }} >
+            <Tooltip title="Mas info">
+              <IconButton onClick={toggleDrawer(true)} style={{float: 'right'}}>
+                <ReadMoreIcon />
+              </IconButton>
+            </Tooltip>
+          </div>
         </CardActions>
       </Card>
+      <Drawer
+        anchor="right"
+        open={openDrawer}
+        onClose={toggleDrawer(false)}
+      >
+        <Box
+          sx={{width: 800 }}
+          role="presentation"
+          onClick={toggleDrawer(false)}
+          onKeyDown={toggleDrawer(false)}
+          style={{ padding: '2em'}}
+        >
+          
+          <Typography variant="h5" color="text.primary">
+              Nombre proyecto
+            </Typography>
+
+        </Box>
+      </Drawer>
     </div>
   )
 };

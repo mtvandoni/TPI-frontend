@@ -2,7 +2,9 @@ import React from 'react';
 import CardCustom from '../../components/card/Card';
 
 import Container from '@mui/material/Container';
-import { Typography, Paper, Box, Drawer } from '@mui/material';
+import { Typography, Paper, Box } from '@mui/material';
+import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined';
+import LocalFireDepartmentOutlinedIcon from '@mui/icons-material/LocalFireDepartmentOutlined';
 
 
 
@@ -13,7 +15,8 @@ const Home = () => {
         padding: '4em',
       }}
     >
-      <Typography variant="h5" component="div">
+      <Typography variant="h5" component="primary.text">
+        <LocalFireDepartmentOutlinedIcon style={{marginRight: '0.5em'}} />
         Los mas votados
       </Typography>
       <div style={{
@@ -26,8 +29,10 @@ const Home = () => {
         <CardCustom />
         <CardCustom />
         <CardCustom />
+        <CardCustom />
       </div>
-      <Typography variant="h5" component="div">
+      <Typography variant="h5" component="text.primary">
+        <CategoryOutlinedIcon style={{marginRight: '0.5em'}} />
         Categorías
       </Typography>
       <div style={{
