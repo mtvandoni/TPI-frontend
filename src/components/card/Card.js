@@ -21,7 +21,7 @@ import ChatIcon from '@mui/icons-material/Chat';
 import Carousel from 'react-material-ui-carousel'
 import './card.css';
 
-const CardCustom = () => {
+const CardCustom = ({title, body, category, img}) => {
   const [openDrawer, setOpenDrawer ] = React.useState(false);
   const [valuePanel, setValuePanel] = React.useState(0);
 
@@ -66,18 +66,16 @@ const CardCustom = () => {
         <CardMedia
           component="img"
           height="250"
-          image="https://upload.wikimedia.org/wikipedia/commons/8/8b/Australia_green_tree_frog_%28Litoria_caerulea%29_crop.jpg"
-          alt="green iguana"
+          image={img}
         />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
-            Lizard
+            {title}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Lizards are a widespread group of squamate reptiles, with over 6,000
-            species, ranging across all continents except Antarctica
+            {body}
           </Typography>
-          <div className="badge">Fintech</div>
+          <div className="badge">{category}</div>
         </CardContent>
         <CardActions>
           <div style={{flexGrow: 1 }} >
@@ -126,25 +124,14 @@ const CardCustom = () => {
           <TabPanel value={valuePanel} index={0}>
             <Carousel>
               <Paper>
-              <img height="400" src="https://estaticos.muyinteresante.es/media/cache/1140x_thumb/uploads/images/gallery/5b768b715cafe83efce47cb1/parrafo-rana-apoyada-en-hoja.jpg" />
-             </Paper>
-             <Paper>
-              <img height="400" src="https://estaticos.muyinteresante.es/media/cache/400x300_thumb/uploads/images/article/5f74511a5bafe85c54614207/ojos-ranas_0.jpg"/>
-             </Paper>
-             <Paper>
-               <img height="400" src="https://static4.abc.es/media/ciencia/2019/03/28/scheele2HR-kWoH--620x349@abc.jpg" />
+              <img height="400" src={img} style={{borderRadius: 15}} />
              </Paper>
           </Carousel>
           <Typography variant="h6" color="text.primary">
-            What is Lorem Ipsum?
+            {title}
           </Typography>
           <Typography variant="body2">
-            Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-            Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a
-            galley of type and scrambled it to make a type specimen book. It has survived not only five centuries,
-            but also the leap into electronic typesetting, remaining essentially unchanged.
-            It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages,
-            and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+            {body}
           </Typography>
           <Stack direction="row" spacing={1} style={{marginTop: '2em'}}>
             <Chip label="JAVA" color="secondary" size="small"/>
