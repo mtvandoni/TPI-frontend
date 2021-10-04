@@ -15,7 +15,7 @@ const Home = () => {
         padding: '4em',
       }}
     >
-      <Typography variant="h5" component="primary.text">
+      <Typography variant="h5" color="text.primary">
         <LocalFireDepartmentOutlinedIcon style={{marginRight: '0.5em'}} />
         Los mas votados
       </Typography>
@@ -31,7 +31,7 @@ const Home = () => {
         <CardCustom />
         <CardCustom />
       </div>
-      <Typography variant="h5" component="text.primary">
+      <Typography variant="h5" color="text.primary">
         <CategoryOutlinedIcon style={{marginRight: '0.5em'}} />
         Categorías
       </Typography>
@@ -53,13 +53,12 @@ const Home = () => {
             },
           }}
         >
-          <Paper elevation={3} />
-          <Paper elevation={3} />
-          <Paper elevation={3} />
-          <Paper elevation={3} />
-          <Paper elevation={3} />
-          <Paper elevation={3} />
-          <Paper elevation={3} />
+          <Paper elevation={3} style={{marginRight: '4em'}}>Educacion</Paper>
+          <Paper elevation={3} style={{marginRight: '4em'}}>Salud</Paper>
+          <Paper elevation={3} style={{marginRight: '4em'}}>Fintech</Paper>
+          <Paper elevation={3} style={{marginRight: '4em'}}>Alimentación</Paper>
+          <Paper elevation={3} style={{marginRight: '4em'}}>Ecommerce</Paper>
+          <Paper elevation={3} style={{marginRight: '4em'}}>EcoCircular</Paper>
         </Box>
       </div>
       <div style={{

@@ -26,7 +26,16 @@ const theme = createTheme({
     },
     text: {
       primary: '#232b2e',
+      secondary: '#696F8C',
+      chip: {
+        blue: '#2952CC',
+        orange: '#85462B'
+      }
     },
+    chip: {
+      blue: '#D6E0FF',
+      orange: '#F8E3DA',
+    }
   },
 })
 export default theme

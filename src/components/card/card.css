@@ -10,3 +10,20 @@
   vertical-align: middle;
   border-radius: 20px;
 }
+
+div.cardPerson {
+  border-radius: 50%!important;
+  margin-right: 5em!important;
+  position: relative!important;
+  background-color: #E9C46A!important;
+}
+
+.cardPerson:last-child {
+  background-color: #2A9D8F!important;
+}
+
+.typoCardPerson {
+  position: absolute!important;
+  top: 1.6em!important;
+  left: 1.4em!important;
+}
