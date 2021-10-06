@@ -1,0 +1,35 @@
+.badge {
+  position: absolute;
+  top: 15px;
+  background-color: black;
+  color: white;
+  width: 32%;
+  text-align: center;
+  font-size: 14px;
+  padding: 0.1em;
+  vertical-align: middle;
+  border-radius: 20px;
+}
+
+div .cardPerson {
+  border-radius: 50%!important;
+  margin-right: 5em!important;
+  position: relative!important;
+  background-color: #E9C46A!important;
+  margin-bottom: 8em!important;
+}
+
+.cardPerson:last-child {
+  background-color: #2A9D8F!important;
+}
+
+.typoCardPerson {
+  position: absolute!important;
+  top: 1.6em!important;
+  left: 1.4em!important;
+}
+
+.cardPerson .description{
+  margin-top: 11em!important;
+  text-align: center!important;
+}
