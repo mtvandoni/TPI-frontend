@@ -7,6 +7,8 @@ import {
 } from "react-router-dom";
 import Login from '../../pages/login/Login';
 import Home from '../../pages/home/Home';
+import Novedades from '../../pages/novedades/Novedades';
+import ExpoProyecto from '../../pages/expoproyecto/Expoproyecto';
 
 import './header.css';
 import AppBar from '@mui/material/AppBar';
@@ -56,8 +58,10 @@ const Header = () => {
             <Home />
           </Route>
           <Route path="/novedades">
+            <Novedades />
           </Route>
           <Route path="/expoproyecto">
+            <ExpoProyecto />
           </Route>
         </Switch>
     </Router>
