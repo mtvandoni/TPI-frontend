@@ -4,7 +4,7 @@ import './home.css';
 import CardCustom from '../../components/card/Card';
 
 import Container from '@mui/material/Container';
-import { Typography, Paper, Box } from '@mui/material';
+import { Typography, Paper, Box, ButtonGroup, Button, InputLabel, Select, MenuItem, FormControl } from '@mui/material';
 import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined';
 import LocalFireDepartmentOutlinedIcon from '@mui/icons-material/LocalFireDepartmentOutlined';
 import AttachMoneyRoundedIcon from '@mui/icons-material/AttachMoneyRounded';
@@ -15,10 +15,9 @@ import StoreRoundedIcon from '@mui/icons-material/StoreRounded';
 import RepeatRoundedIcon from '@mui/icons-material/RepeatRounded';
 
 const Home = () => {
-  const handleClickEducacion = () => {
-
-  
-    console.log('educacion');
+  const [filterCategory, setFilterCategory] = React.useState(''); 
+  const handleClickCategory = (title) => {
+    setFilterCategory(title);
   };
 
   return(
@@ -66,43 +65,70 @@ const Home = () => {
             },
           }}
         >
-          <Paper tabIndex="0" elevation={0} className="paperCategory" onClick={() => handleClickEducacion()}>
+          <Paper tabIndex="0" elevation={0} className="paperCategory" onClick={() => handleClickCategory('Educación')}>
             <SchoolRoundedIcon style={{ fontSize: '4.5em'}} />
             <Typography variant="subtitle2" color="inherit">
               Educación
             </Typography>
           </Paper>
-          <Paper tabIndex="0" elevation={0} className="paperCategory">
+          <Paper tabIndex="0" elevation={0} className="paperCategory" onClick={() => handleClickCategory('Salud')}>
             <LocalHospitalRoundedIcon style={{ fontSize: '4.5em'}} />
             <Typography variant="subtitle2" color="inherit">
               Salud
             </Typography>
           </Paper>
-          <Paper tabIndex="0" elevation={0} className="paperCategory">
+          <Paper tabIndex="0" elevation={0} className="paperCategory" onClick={() => handleClickCategory('Fintech')}>
             <AttachMoneyRoundedIcon style={{ fontSize: '4.5em'}} />
             <Typography variant="subtitle2" color="inherit">
               Fintech
             </Typography>
           </Paper>
-          <Paper tabIndex="0" elevation={0} className="paperCategory">
+          <Paper tabIndex="0" elevation={0} className="paperCategory" onClick={() => handleClickCategory('Alimentación')}>
             <FoodBankRoundedIcon style={{ fontSize: '4.5em'}} />
             <Typography variant="subtitle2" color="inherit">
               Alimentación
             </Typography>
           </Paper>
-          <Paper tabIndex="0" elevation={0} className="paperCategory">
+          <Paper tabIndex="0" elevation={0} className="paperCategory" onClick={() => handleClickCategory('Ecommerce')}>
             <StoreRoundedIcon style={{ fontSize: '4.5em'}} />
             <Typography variant="subtitle2" color="inherit">
               Ecommerce
             </Typography>
           </Paper>
-          <Paper tabIndex="0" elevation={0} className="paperCategory">
+          <Paper tabIndex="0" elevation={0} className="paperCategory" onClick={() => handleClickCategory('Eco Circular')}>
             <RepeatRoundedIcon style={{ fontSize: '4.5em'}} />
             <Typography variant="subtitle2" color="inherit">
               Eco Circular
             </Typography>
           </Paper>
         </Box>
+      </div>
+      <div
+        style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}
+      >
+        <Typography variant="h5" color="text.primary">
+          {filterCategory}
+        </Typography>
+        <div style={{width: '38%'}}>
+          <ButtonGroup variant="outlined" aria-label="outlined primary button group">
+            <Button variant="contained" style={{height: '4em', width: '8em'}}>WEB</Button>
+            <Button style={{height: '4em', width: '8em'}}>MOBILE</Button>
+          </ButtonGroup>
+          <FormControl style={{width: '50%', marginLeft: '1em'}} >
+            <InputLabel id="demo-simple-select-label">LENGUAJE</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              // value={age}
+              label="LENGUAJE"
+              // onChange={handleChange}
+            >
+              <MenuItem value={10}>PHP</MenuItem>
+              <MenuItem value={20}>JAVA</MenuItem>
+              <MenuItem value={30}>REACT</MenuItem>
+            </Select>
+          </FormControl>
+        </div>
       </div>
       <div style={{
         display: 'flex',
