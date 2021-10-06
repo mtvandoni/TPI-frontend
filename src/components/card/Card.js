@@ -13,7 +13,9 @@ import {
   Tab,
   Paper,
   Stack,
-  Chip
+  Chip,
+  Avatar,
+  TextField
   } from '@mui/material';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import ReadMoreIcon from '@mui/icons-material/ReadMore';
@@ -42,7 +44,7 @@ const CardCustom = ({title, body, category, img}) => {
       >
         {value === index && (
           <Box sx={{ p: 3 }}>
-            <Typography>{children}</Typography>
+            <Typography variant="text">{children}</Typography>
           </Box>
         )}
       </div>
@@ -69,7 +71,7 @@ const CardCustom = ({title, body, category, img}) => {
           image={img}
         />
         <CardContent>
-          <Typography gutterBottom variant="h5" component="div">
+          <Typography variant="h5">
             {title}
           </Typography>
           <Typography variant="body2" color="text.secondary">
@@ -122,11 +124,9 @@ const CardCustom = ({title, body, category, img}) => {
             </Tabs>
           </Box>
           <TabPanel value={valuePanel} index={0}>
-            <Carousel>
               <Paper>
-              <img height="400" src={img} style={{borderRadius: 15}} />
+              <img height="400" src={img} style={{borderRadius: 15}} alt="prueba"/>
              </Paper>
-          </Carousel>
           <Typography variant="h6" color="text.primary">
             {title}
           </Typography>
@@ -160,31 +160,122 @@ const CardCustom = ({title, body, category, img}) => {
                 },
               }}
             >
-              <Paper elevation={3} className="cardPerson">
-                <Typography variant="h4" color="white" className="typoCardPerson">
-                  MV
-                </Typography>
-              </Paper>
-              <Paper elevation={3} className="cardPerson">
-                <Typography variant="h4" color="white" className="typoCardPerson">
-                  MV
-                </Typography>
-              </Paper>
-              <Paper elevation={3} className="cardPerson">
-                <Typography variant="h4" color="white" className="typoCardPerson">
-                  MV
-                </Typography>
-              </Paper>
-              <Paper elevation={3} className="cardPerson">
-                <Typography variant="h4" color="white" className="typoCardPerson">
-                  MV
-                </Typography>
-              </Paper>
+              <div className="cardPerson">
+                <Paper elevation={3}>
+                  <Typography variant="h4" color="white" className="typoCardPerson">
+                    MV
+                  </Typography>
+                </Paper>
+                <div className="description">
+                  <Typography variant="subtitle2" color="">Fulanito de tal </Typography>
+                  <Typography variant="subtitle1" color="">Alumno </Typography>
+                </div>
+              </div>
+              <div className="cardPerson">
+                <Paper elevation={3}>
+                  <Typography variant="h4" color="white" className="typoCardPerson">
+                    MV
+                  </Typography>
+                </Paper>
+                <div className="description">
+                  <Typography variant="subtitle2" color="">Fulanito de tal </Typography>
+                  <Typography variant="subtitle1" color="">Alumno </Typography>
+                </div>
+              </div>
+              <div className="cardPerson">
+                <Paper elevation={3}>
+                  <Typography variant="h4" color="white" className="typoCardPerson">
+                    MV
+                  </Typography>
+                </Paper>
+                <div className="description">
+                  <Typography variant="subtitle2" color="">Fulanito de tal </Typography>
+                  <Typography variant="subtitle1" color="">Alumno </Typography>
+                </div>
+              </div>
+              <div className="cardPerson">
+                <Paper elevation={3}>
+                  <Typography variant="h4" color="white" className="typoCardPerson">
+                    MV
+                  </Typography>
+                </Paper>
+                <div className="description">
+                  <Typography variant="subtitle2" color="">Fulanito de tal </Typography>
+                  <Typography variant="subtitle1" color="">Profesor </Typography>
+                </div>
+              </div>
             </Box>
           </div>
           </TabPanel>
-
         </Box>
+        <div
+          style={{
+            marginRight: 'auto',
+            marginLeft: 'auto',
+            width: '60%',
+            marginBottom: '4em'
+          }}>
+          <div
+            style={{
+              borderBottom: '1px solid #80808052',
+              marginBottom: '2em',
+              paddingBottom: '1em'
+            }}
+          >
+            <div
+              style={{
+                marginBottom: '1em',
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}
+            >
+              <div style={{width: '50%'}}>
+                <Avatar sx={{ bgcolor: 'warning.main' }} style={{float: 'left', marginRight: '1em'}}>MV</Avatar>
+                <Typography variant="subtitle2" color="">Micaela</Typography>
+                <Typography variant="subtitle2" color="warning.main">Alumno</Typography>
+              </div>
+              <Typography variant="subtitle2" color="">07/09/2021</Typography>
+            </div>
+            <div style={{marginLeft: '4em'}}>
+            <Typography variant="subtitle2" color="">Lorem lorem ipsum!! </Typography>
+            </div>
+          </div>
+          <div
+            style={{
+              borderBottom: '1px solid #80808052',
+              marginBottom: '2em',
+              paddingBottom: '1em'
+            }}
+          >
+            <div
+              style={{
+                marginBottom: '1em',
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}
+            >
+              <div style={{width: '50%'}}>
+                <Avatar sx={{ bgcolor: 'info.main' }} style={{float: 'left', marginRight: '1em'}}>MJ</Avatar>
+                <Typography variant="subtitle2" color="">Mariano Juiz</Typography>
+                <Typography variant="subtitle2" color="info.main">Profesor</Typography>
+              </div>
+              <Typography variant="subtitle2" color="">07/09/2021</Typography>
+            </div>
+            <div style={{marginLeft: '4em'}}>
+            <Typography variant="subtitle2" color="">Lorem lorem ipsum!! </Typography>
+            </div>
+          </div>
+          <TextField
+            style={{width: '100%' }}
+            id="standard-textarea"
+            label="Comentar"
+            placeholder="Nuevo comentario..."
+            multiline
+            variant="outlined"
+          />
+        </div>
       </Drawer>
     </div>
   )

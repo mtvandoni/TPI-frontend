@@ -31,16 +31,16 @@ const Header = () => {
               sx={{ mr: 2 }}
             >
             </IconButton>
-            <Typography variant="h6" component="div" style={{width: '10%'}}>
+            <Typography variant="h6" style={{width: '10%'}}>
               TPI
             </Typography>
-            <Typography variant="subtitle2" component="div" style={{ marginRight: '2em' }}>
+            <Typography variant="subtitle2" style={{ marginRight: '2em' }}>
               <Link to="/home">Home</Link>
             </Typography>
-            <Typography variant="subtitle2" component="div" style={{marginRight: '2em'}}>
+            <Typography variant="subtitle2" style={{marginRight: '2em'}}>
               <Link to="/novedades">Novedades</Link>
             </Typography>
-            <Typography variant="subtitle2" component="div" sx={{ flexGrow: 1 }} style={{marginRight: '2em'}} >
+            <Typography variant="subtitle2" sx={{ flexGrow: 1 }} style={{marginRight: '2em'}} >
               <Link to="/expoproyecto">ExpoProyecto</Link>
             </Typography>
             <Button color="primary" variant="contained"><Link to="/login">Login</Link></Button>

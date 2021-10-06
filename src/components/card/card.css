@@ -11,11 +11,12 @@
   border-radius: 20px;
 }
 
-div.cardPerson {
+div .cardPerson {
   border-radius: 50%!important;
   margin-right: 5em!important;
   position: relative!important;
   background-color: #E9C46A!important;
+  margin-bottom: 8em!important;
 }
 
 .cardPerson:last-child {
@@ -26,4 +27,9 @@ div.cardPerson {
   position: absolute!important;
   top: 1.6em!important;
   left: 1.4em!important;
+}
+
+.cardPerson .description{
+  margin-top: 11em!important;
+  text-align: center!important;
 }
