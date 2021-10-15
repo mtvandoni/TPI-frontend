@@ -37,9 +37,9 @@ const Home = () => {
         flexWrap: 'wrap',
         marginBottom: '4em',
       }}>
-        <CardCustom title='TPI' body='lalalalaa TPI alalala' category='Educacion' img="https://thumbs.dreamstime.com/b/aprendizaje-electr%C3%B3nico-app-del-vector-49960281.jpg" />
-        <CardCustom title='FintechApp1' body='lalalalaa FINTECHAPP alalala' category='Fintech' img="https://future.inese.es/wp-content/uploads/2020/02/fintechfuture.jpg" />
-        <CardCustom title='Salud' body='lalalalaa SALUD alalala' category='Salud' img="https://www.nalgeneiberia.com/wp-content/uploads/2016/02/1602_Nalgene_blog_5appssalud_01-770x452.jpg" />
+        <CardCustom title='EducApp' body='La app EducApp loremp impsum' category='Educacion' img="https://thumbs.dreamstime.com/b/aprendizaje-electr%C3%B3nico-app-del-vector-49960281.jpg" />
+        <CardCustom title='MercadoPago' body='La app MercadoPago lorem impsum' category='Fintech' img="https://future.inese.es/wp-content/uploads/2020/02/fintechfuture.jpg" />
+        <CardCustom title='OsdeApp' body='La app OsdeApp lorem impsmum' category='Salud' img="https://www.nalgeneiberia.com/wp-content/uploads/2016/02/1602_Nalgene_blog_5appssalud_01-770x452.jpg" />
       </div>
       <Typography variant="h5" color="text.primary">
         <CategoryOutlinedIcon style={{marginRight: '0.5em'}} />
