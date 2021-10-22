@@ -13,12 +13,40 @@ import SchoolRoundedIcon from '@mui/icons-material/SchoolRounded';
 import FoodBankRoundedIcon from '@mui/icons-material/FoodBankRounded';
 import StoreRoundedIcon from '@mui/icons-material/StoreRounded';
 import RepeatRoundedIcon from '@mui/icons-material/RepeatRounded';
+import * as XLSX from 'xlsx';
+
+import logo from '../../../src/luthorLogo.svg';
 
 const Home = () => {
-  const [filterCategory, setFilterCategory] = React.useState(''); 
+  const [filterCategory, setFilterCategory] = React.useState('');
+  const [selectedFile, setSelectedFile] = React.useState(null);
+
   const handleClickCategory = (title) => {
     setFilterCategory(title);
   };
+
+  const testConvert = (event) => {
+    console.log(event);
+    const target = event.target;
+
+    let hojas = [];
+    let reader = new FileReader();
+      reader.readAsArrayBuffer(target.files[0]);
+      reader.onloadend = (e) => {
+        var data = new Uint8Array(e.target.result);
+        var workbook = XLSX.read(data, {type: 'array'});
+
+        workbook.SheetNames.forEach(function(sheetName) {
+          // Here is your object
+          var XL_row_object = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
+          hojas.push({
+            data: XL_row_object,
+            sheetName
+          })
+          console.log(hojas);
+        })
+      }
+  }
 
   return(
     <Container maxWidth="xl"
@@ -26,6 +54,11 @@ const Home = () => {
         padding: '4em',
       }}
     >
+      <input
+          type="file"
+          value={selectedFile}
+          onChange={testConvert}
+        />
       <Typography variant="h5" color="text.primary">
         <LocalFireDepartmentOutlinedIcon style={{marginRight: '0.5em'}} />
         Los mas votados
