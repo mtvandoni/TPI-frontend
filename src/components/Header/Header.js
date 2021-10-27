@@ -9,16 +9,25 @@ import Login from '../../pages/login/Login';
 import Home from '../../pages/home/Home';
 import Novedades from '../../pages/novedades/Novedades';
 import ExpoProyecto from '../../pages/expoproyecto/Expoproyecto';
+import Backoffice from '../../pages/backoffice/Backoffice';
 
 import './header.css';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
+import {
+  AppBar,
+  Box,
+  Toolbar,
+  Typography,
+  Button,
+  IconButton,
+  Avatar,
+  Tooltip,
+ } from '@mui/material';
 
 const Header = () => {
+  const [user, setUser] = React.useState(null)
+
+  React.useEffect(() => {
+  }, []);
 
   return(
     <Router>
@@ -45,7 +54,17 @@ const Header = () => {
             <Typography variant="subtitle2" sx={{ flexGrow: 1 }} style={{marginRight: '2em'}} >
               <Link to="/expoproyecto">ExpoProyecto</Link>
             </Typography>
-            <Button color="primary" variant="contained"><Link to="/login">Login</Link></Button>
+            {
+              user 
+              ?
+                <><Button color="primary" variant="contained" style={{ marginRight: '2em' }}>
+                  <Link to="/backoffice">Backoffice</Link>
+                </Button><Tooltip title="Administrador" placement="bottom">
+                    <Avatar sx={{ bgcolor: (user && user === 'admin' ? '#f4a261' : '#e9c46a') }}>AD</Avatar>
+                  </Tooltip></>
+              :
+              <Button color="primary" variant="contained"><Link to="/login">Login</Link></Button>
+            }
           </Toolbar>
         </AppBar>
       </Box>
@@ -62,6 +81,9 @@ const Header = () => {
           </Route>
           <Route path="/expoproyecto">
             <ExpoProyecto />
+          </Route>
+          <Route path="/backoffice">
+            <Backoffice />
           </Route>
         </Switch>
     </Router>
