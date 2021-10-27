@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React from 'react';
 import axios from 'axios';
 import {
@@ -9,6 +10,7 @@ import {
   Typography,
   Container
 } from '@mui/material';
+import { useHistory } from 'react-router-dom';
 
 const apiURL = 'https://localhost:44311';
 const { search } = window.location;
@@ -17,28 +19,44 @@ const redirect = params.get('callbackURL');
 
 const Login = () => {
   const [user, setUser] = React.useState(null);
+  const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
+  const history = useHistory();
 
   React.useEffect(() => {
-    axios.get(apiURL + '/api/usuario').then(response => {
-      console.log(response);
-    })
-  })
+    setUser(null);
+    localStorage.setItem('auth', JSON.stringify(null));
+  }, [])
+
+  
+  const handleEmail = (event) => {
+    setEmail(event.target.value);
+  };
+
+  const handlePassword = (event) => {
+    setPassword(event.target.value);
+  };
 
   const submitSession = () => {
     const obj = {
-      emailUnlam: 'mica@admin.com',
-      password: '123'
+      emailUnlam: email,
+      password: password,
     }
+    console.log(obj);
     axios.post(apiURL + '/api/usuario/authenticate', obj)
       .then(response => {
         console.log(response.data);
         if (response.data) {
           setUser(response.data.idTipo);
           if (response.data.token) {
-            localStorage.setItem('auth', JSON.stringify(response.data));
+            window.localStorage.setItem('auth', JSON.stringify(response.data));
             window.location.href = redirect || '/home';
+            // history.push("/home");
           }
         }
+        
+
+      console.log('login', localStorage.getItem('auth'));
       })
       .catch((error) => {
         if (error) {
@@ -62,13 +80,12 @@ const Login = () => {
         style={{backdropFilter: 'blur(2px)', height: '100vh' }}
       >
         <Typography component="h3" variant="h3" style={{ marginBottom: '1em', fontWeight: '500'}}>
-          Bienvenidx!
+          Bienvenido a WEB TPI
         </Typography>
         <Typography component="h4" variant="h4" style={{ marginBottom: '1em', fontWeight: '300', width: '20em'}}>
         Por favor ingrese su email y contraseña para loguearse a la plataforma
         </Typography>
         <Box component="form" sx={{ mt: 1 }}>
-          <form >
             <TextField
               margin="normal"
               required
@@ -78,6 +95,7 @@ const Login = () => {
               name="email"
               autoComplete="email"
               autoFocus
+              onChange={handleEmail}
             />
             <TextField
               margin="normal"
@@ -88,6 +106,7 @@ const Login = () => {
               type="password"
               id="password"
               autoComplete="current-password"
+              onChange={handlePassword}
             />
             <Button
               type="submit"
@@ -99,14 +118,13 @@ const Login = () => {
             >
               Ingresar
             </Button>
-          </form>
-          <Grid container>
+          {/*} <Grid container>
             <Grid item xs>
               <Link href="#" variant="body2" color="error">
                 ¿Olvidaste la contraseña?
               </Link>
             </Grid>
-          </Grid>
+      </Grid> */}
         </Box>
       </Box>
     </Container>

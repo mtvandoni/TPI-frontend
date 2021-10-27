@@ -1,10 +1,17 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
 import './App.css';
 
 import Header from './components/header/Header';
-// import Store from './components/store';
+import Login from './pages/login/Login';
 
 const App = () => {
+  const auth = localStorage.getItem('auth');
+  const [user, setUser] = React.useState(null);
+
+  React.useEffect(() => {
+    setUser(JSON.parse(auth));
+  },[]);
   
  /* React.useEffect(() => {
     fetch("https://localhost:44311/api/persona", {
@@ -31,6 +38,10 @@ const App = () => {
   return (
     <div>
       <Header />
+      {!user ?
+        <Login /> 
+        : ''
+      }
     </div>
   );
 }

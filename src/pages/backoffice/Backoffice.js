@@ -1,3 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react/jsx-no-duplicate-props */
+/* eslint-disable no-unused-vars */
 import React from 'react';
 import axios from 'axios';
 
@@ -11,6 +14,8 @@ import {
   Button,
   TextField,
   Divider,
+  Snackbar,
+  Alert
  } from '@mui/material';
  import * as XLSX from 'xlsx';
  import './backoffice.css';
@@ -22,17 +27,25 @@ const Backoffice = ({auth}) => {
   const [valuePanel, setValuePanel] = React.useState(0);
   const [selectedFile, setSelectedFile] = React.useState('');
   const [cargaAlumnos, setCargaAlumnos] = React.useState([]);
-  const [nCursada, setNCursada] = React.useState('');
-  const [nombre, setNombre] = React.useState('');
-  const [dni, setDni] = React.useState('');
-  const [edad, setEdad] = React.useState('');
-  const [email, setEmail] = React.useState('');
-  const [emailUnlam, setEmailUnlam] = React.useState('');
+  const [nCursada, setNCursada] = React.useState();
+  const [nCursada2, setNCursada2] = React.useState('');
+  const [nombre, setNombre] = React.useState();
+  const [dni, setDni] = React.useState();
+  const [edad, setEdad] = React.useState();
+  const [email, setEmail] = React.useState();
+  const [emailUnlam, setEmailUnlam] = React.useState();
+  const [open, setOpen] = React.useState(false);
+  const [messageSnackBar, setMessageSnackBar] = React.useState('');
+  const [severitySnackBar, setSeveritySnackBar] = React.useState('success');
 
   const headers = { 
     'Authorization': auth,
     'Content-type': 'application/json; charset=iso-8859-1',
   };
+
+  React.useEffect(() => {
+    console.log(auth);
+  }, []);
 
   function a11yProps(index) {
     return {
@@ -45,39 +58,7 @@ const Backoffice = ({auth}) => {
     setValuePanel(newValue);
   }
 
-  const handleNCursada = (event) => {
-    const value = event.target.value;
-    console.log(value);
-    setNCursada(value);
-  }
-
-  const handleNombre = (event) => {
-    const value = event.target.value;
-    setNombre(value);
-  }
-
-  const handleDni = (event) => {
-    const value = event.target.value;
-    setDni(value);
-  }
-
-  const handleEdad = (event) => {
-    const value = event.target.value;
-    setEdad(value);
-  }
-
-  const handleEmail = (event) => {
-    const value = event.target.value;
-    setEmail(value);
-  }
-
-  const handleEmailUnlam = (event) => {
-    const value = event.target.value;
-    setEmailUnlam(value);
-  }
-
   const convertToJson = (event) => {
-    console.log(event);
     const target = event.target;
 
     let hojas = [];
@@ -111,17 +92,86 @@ const Backoffice = ({auth}) => {
             })
           }
         })
-        console.log(hojas[0].data);
         console.log(alumnos);
         setCargaAlumnos(alumnos);
       }
-  }
+  };
 
-  const altaAlumnos = () => {
+  const handleCursada = (event) => {
+    setNCursada(event.target.value);
+  };
+
+  const handleCursada2 = (event) => {
+    setNCursada2(event.target.value);
+    event.preventDefault();
+  };
+
+  const handleNombre = (event) => {
+    setNombre(event.target.value);
+  };
+
+  const handleDni = (event) => {
+    setDni(event.target.value);
+  };
+
+  const handleEdad = (event) => {
+    setEdad(event.target.value);
+  };
+
+  const handleEmail = (event) => {
+    setEmail(event.target.value);
+  };
+
+  const handleEmailUnlam = (event) => {
+    setEmailUnlam(event.target.value);
+  };
+
+  const altaAlumnosMasiva = () => {
     axios.post(apiURL + '/api/altamasivausuarios/postaltamasiva', cargaAlumnos, {headers})
       .then(response => {
-        console.log(response.data);
+        if(response) { 
+          setMessageSnackBar('Alta masiva creada correctamente');
+          setSeveritySnackBar('success');
+          setOpen(true);
+        }
+      });
+  };
+
+
+  const altaAlumnoIndividual = () => {
+    const object = {
+      nombre: nombre,
+      dni: dni,
+      edad: edad,
+      email: email,
+      emailUnlam: emailUnlam,
+      idTipo: 2,
+      idCursada: nCursada2
+    };
+
+    axios.post(apiURL + '/api/usuario', object, {headers})
+      .then(response => {
+        if(response) { 
+          setMessageSnackBar('Usuario creado correctamente');
+          setSeveritySnackBar('success');
+          setOpen(true);
+        }
       })
+      .catch(err => {
+        if(err.toString().includes('400')) {
+          console.log('UPS');
+          setMessageSnackBar('Usuario existente');
+          setSeveritySnackBar('error');
+          setOpen(true);
+        }
+        if(err.toString().includes('500')) {
+          setMessageSnackBar('Usuario creado correctamente');
+          setSeveritySnackBar('success');
+          setOpen(true);
+        }
+      })
+
+    console.log(object);
   };
 
   const TabPanel = (props) => {
@@ -143,6 +193,14 @@ const Backoffice = ({auth}) => {
       </div>
     );
   }
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
 
   return(
     <Container maxWidth="xl"
@@ -182,7 +240,7 @@ const Backoffice = ({auth}) => {
           }}
         >
           <TabPanel value={valuePanel} index={0}>
-            Item One
+            Very soon...
           </TabPanel>
           <TabPanel value={valuePanel} index={1}>
             <Typography variant="h5" color="text.secondary">Alta masiva de alumnos</Typography>
@@ -194,25 +252,31 @@ const Backoffice = ({auth}) => {
                 marginTop: '2em',
                 marginBottom: '2em',
               }}>
-              <TextField
-                label="N° Cursada"
-                onChange={handleNCursada}
-                value={nCursada}
-              />
-              <input
-                className="input-file"
-                style={{ marginTop: '1em'}}
-                type="file"
-                value={selectedFile}
-                onChange={convertToJson}>
-              </input>
-              <Button
-                variant="contained"
-                color="secondary"
-                onClick={() => altaAlumnos()}
-                style={{ width: '10em', height: '2em', marginTop: '0.5em' }}
-              >ALTA MASIVA
-              </Button>
+                <form>
+                <TextField
+                  key="cursada"
+                  label="N° Cursada"
+                  onChange={handleCursada}
+                  required
+                  id="cursada"
+                  name="cursada"
+                  value={nCursada}
+                />
+                <input
+                  className="input-file"
+                  style={{ marginTop: '1em'}}
+                  type="file"
+                  value={selectedFile}
+                  onChange={convertToJson}>
+                </input>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={() => altaAlumnosMasiva()}
+                  style={{ width: '10em', height: '2em', marginTop: '0.5em' }}
+                >ALTA MASIVA
+                </Button>
+              </form>
             </div>
             <Divider />
             <Typography
@@ -229,49 +293,61 @@ const Backoffice = ({auth}) => {
                 marginBottom: '2em',
                 width: '50%'
               }}>
-              <TextField
-                className="textField"
-                label="N° Cursada"
-                onChange={handleNCursada}
-                value={nCursada}
-              />
-              <TextField
-                className="textField"
-                label="Nombre"
-                onChange={handleNombre}
-                value={nombre}
-              />
-              <TextField
-                className="textField"
-                label="Dni"
-                onChange={handleDni}
-                value={dni}
-              />
-              <TextField
-                className="textField"
-                label="Edad"
-                onChange={handleEdad}
-                value={edad}
-              />
-              <TextField
-                className="textField"
-                label="Email"
-                onChange={handleEmail}
-                value={email}
-              />
-              <TextField
-                className="textField"
-                label="Email Unlam"
-                onChange={handleEmailUnlam}
-                value={emailUnlam}
-              />
+                <TextField
+                  key="cursada2"
+                  id="cursada2"
+                  className="textField"
+                  label="N° Cursada 2"
+                  onChange={handleCursada2}
+                  value={nCursada2}
+                />
+                <TextField
+                  key="nombre"
+                  id="nombre"
+                  className="textField"
+                  label="Nombre"
+                  onChange={handleNombre}
+                  value={nombre}
+                />
+                <TextField
+                  key="dni"
+                  id="dni"
+                  className="textField"
+                  label="Dni"
+                  onChange={handleDni}
+                  value={dni}
+                />
+                <TextField
+                  key="edad"
+                  id="edad"
+                  className="textField"
+                  label="Edad"
+                  onChange={handleEdad}
+                  value={edad}
+                />
+                <TextField
+                  key="email"
+                  id="email"
+                  className="textField"
+                  label="Email"
+                  onChange={handleEmail}
+                  value={email}
+                />
+                <TextField
+                  key="emailunlam"
+                  id="emailunlam"
+                  className="textField"
+                  label="Email Unlam"
+                  onChange={handleEmailUnlam}
+                  value={emailUnlam}
+                />
             </div>
             <div style={{ display: 'flex', justifyContent: 'center', width: '50%' }}>
               <Button
                 style={{ alignItems: 'center' }}
                 variant="contained"
                 color="secondary"
-                onClick={() => altaAlumnos()}
+                onClick={() => altaAlumnoIndividual()}
                 style={{ width: '7em', height: '2em', marginBottom: '2em' }}
                 >GUARDAR
                 </Button>
@@ -279,13 +355,25 @@ const Backoffice = ({auth}) => {
             <Divider />
           </TabPanel>
           <TabPanel value={valuePanel} index={2}>
-            Item Three
+            Very soon...
           </TabPanel>
           <TabPanel value={valuePanel} index={3}>
-            Item Four
+            Very soon...
           </TabPanel>
         </Paper>
       </Box>
+      <Snackbar
+        open={open}
+        autoHideDuration={6000}
+        onClose={handleClose}
+        anchorOrigin={{vertical: 'top', horizontal: 'center'}}
+      >
+        <Alert
+        onClose={handleClose}
+        severity={severitySnackBar} sx={{ width: '100%' }}>
+          {messageSnackBar}
+        </Alert>
+      </Snackbar>
     </Container>
   )
 };

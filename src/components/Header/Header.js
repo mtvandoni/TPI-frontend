@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-unused-vars */
 import React from 'react';
 import {
   BrowserRouter as Router,
@@ -10,6 +12,7 @@ import Home from '../../pages/home/Home';
 import Novedades from '../../pages/novedades/Novedades';
 import ExpoProyecto from '../../pages/expoproyecto/Expoproyecto';
 import Backoffice from '../../pages/backoffice/Backoffice';
+import ExitToAppRoundedIcon from '@mui/icons-material/ExitToAppRounded';
 
 import './header.css';
 import {
@@ -28,9 +31,11 @@ const Header = () => {
   const auth = localStorage.getItem('auth');
   React.useEffect(() => {
     setUser(JSON.parse(auth));
-    console.log('header', JSON.parse(auth));
-  }, [auth]);
+  }, []);
 
+  const goLogin =() => {
+    window.location.href = '/login';
+  };
   return(
     <Router>
       <Box sx={{ flexGrow: 1 }}>
@@ -44,39 +49,52 @@ const Header = () => {
               sx={{ mr: 2 }}
             >
             </IconButton>
-            <Typography variant="h6" style={{width: '10%'}}>
-              TPI
-            </Typography>
-            <Typography variant="subtitle2" style={{ marginRight: '2em' }}>
-              <Link to="/home">Home</Link>
-            </Typography>
-            <Typography variant="subtitle2" style={{marginRight: '2em'}}>
-              <Link to="/novedades">Novedades</Link>
-            </Typography>
-            <Typography variant="subtitle2" sx={{ flexGrow: 1 }} style={{marginRight: '2em'}} >
-              <Link to="/expoproyecto">ExpoProyecto</Link>
-            </Typography>
+            <img style={{marginRight: '2em'}} src={process.env.PUBLIC_URL+'logoTpi.png'} width="100"/>
+            {
+              user
+              ?
+               <><Typography variant="subtitle2" style={{ marginRight: '2em' }}>
+                <Link to="/home">Home</Link>
+              </Typography>
+              <Typography variant="subtitle2" style={{marginRight: '2em'}}>
+                <Link to="/novedades">Novedades</Link>
+              </Typography>
+              <Typography variant="subtitle2" sx={{ flexGrow: 1 }} style={{marginRight: '2em'}} >
+                <Link to="/expoproyecto">ExpoProyecto</Link>
+              </Typography></>
+              : ''
+            }
             {
               user 
               ?
-                <><Button color="primary" variant="contained" style={{ marginRight: '2em' }}>
-                  <Link to="/backoffice">Backoffice</Link>
-                </Button><Tooltip title="Administrador" placement="bottom">
-                    <Avatar sx={{ bgcolor: (user?.idTipo === '1' ? '#f4a261' : '#e9c46a') }}>{user ? user.nombre.substr(0, 1) : null}</Avatar>
-                  </Tooltip></>
-              :
-              <Button color="primary" variant="contained"><Link to="/login">Logout</Link></Button>
+                <>
+                {user.idTipo === 1
+                  ?
+                  <Button color="primary" variant="contained" style={{ marginRight: '2em' }}>
+                    <Link to="/backoffice">Backoffice</Link>
+                  </Button>
+                  : ''
+                }<Tooltip title={user?.idTipo === 1 ? 'Administrador' : 'Alumno'} placement="bottom">
+                    <Avatar sx={{ bgcolor: (user?.idTipo === 1 ? '#f4a261' : '#e9c46a') }}>{user ? user.nombre.substr(0, 1).toUpperCase() : null}</Avatar>
+                  </Tooltip>
+                  <IconButton
+                    style={{ marginLeft: '2em' }}
+                    onClick={() => goLogin()
+                  }>
+                  <ExitToAppRoundedIcon />
+                </IconButton></>
+              : ''
             }
           </Toolbar>
         </AppBar>
       </Box>
 
       <Switch>
-          <Route path="/login">
+         {/* } <Route path="/login">
             <Login />
-          </Route>
+          </Route> */}
           <Route path="/home">
-            <Home />
+            <Home auth={user} />
           </Route>
           <Route path="/novedades">
             <Novedades />
@@ -85,7 +103,7 @@ const Header = () => {
             <ExpoProyecto />
           </Route>
           <Route path="/backoffice">
-            <Backoffice auth={user.token} />
+            <Backoffice auth={user?.token} />
           </Route>
         </Switch>
     </Router>

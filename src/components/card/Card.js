@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import * as React from 'react';
 import {
   Card,
@@ -23,7 +24,7 @@ import ChatIcon from '@mui/icons-material/Chat';
 import Carousel from 'react-material-ui-carousel'
 import './card.css';
 
-const CardCustom = ({title, body, category, img}) => {
+const CardCustom = ({data, title, body, category, img}) => {
   const [openDrawer, setOpenDrawer ] = React.useState(false);
   const [valuePanel, setValuePanel] = React.useState(0);
 
@@ -64,7 +65,7 @@ const CardCustom = ({title, body, category, img}) => {
 
   return(
     <div>
-      <Card sx={{ maxWidth: 300, borderRadius: '15px', marginTop: '2em', position: 'relative' }}>
+      <Card sx={{ maxWidth: 300, minWidth: 300, borderRadius: '15px', marginTop: '2em', position: 'relative' }}>
         <CardMedia
           component="img"
           height="250"
@@ -72,12 +73,12 @@ const CardCustom = ({title, body, category, img}) => {
         />
         <CardContent>
           <Typography variant="h5">
-            {title}
+            {data?.nombre}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            {body}
+            {data?.descripcion}
           </Typography>
-          <div className="badge">{category}</div>
+          {/* <div className="badge">{category}</div> */}
         </CardContent>
         <CardActions>
           <div style={{flexGrow: 1 }} >
@@ -108,7 +109,7 @@ const CardCustom = ({title, body, category, img}) => {
           style={{ padding: '2em'}}
         >
           <Typography variant="h5" color="text.primary">
-            Nombre proyecto
+            {data?.nombre}
           </Typography>
           <Box sx={{ borderBottom: 1, borderColor: 'divider', marginTop: '2em' }}>
             <Tabs
@@ -128,18 +129,17 @@ const CardCustom = ({title, body, category, img}) => {
               <img height="400" src={img} style={{borderRadius: 15}} alt="prueba"/>
              </Paper>
           <Typography variant="h6" color="text.primary">
-            {title}
+            {data?.nombre}
           </Typography>
           <Typography variant="body2">
-            {body}
+            {data?.descripcion}
           </Typography>
           <Stack direction="row" spacing={1} style={{marginTop: '2em'}}>
-            <Chip label="JAVA" color="secondary" size="small"/>
-            <Chip label="REACTJS" color="primary" size="small"/>
+            <Chip label={data?.idTipoProyecto === 1 ? 'WEB' : 'MOBILE'} color="secondary" size="small"/>
           </Stack>
           </TabPanel>
           <TabPanel value={valuePanel} index={1}>
-            Entregas
+            Coming Soon...
           </TabPanel>
           <TabPanel value={valuePanel} index={2}>
           <div style={{
@@ -148,7 +148,8 @@ const CardCustom = ({title, body, category, img}) => {
             flexWrap: 'wrap',
             marginBottom: '4em',
           }}>
-            <Box
+            Coming Soon...
+            {/*<Box
               sx={{
                 display: 'flex',
                 flexWrap: 'wrap',
@@ -204,11 +205,11 @@ const CardCustom = ({title, body, category, img}) => {
                   <Typography variant="subtitle1" color="">Profesor </Typography>
                 </div>
               </div>
-            </Box>
+            </Box> */}
           </div>
           </TabPanel>
         </Box>
-        <div
+        {/*<div
           style={{
             marginRight: 'auto',
             marginLeft: 'auto',
@@ -275,7 +276,7 @@ const CardCustom = ({title, body, category, img}) => {
             multiline
             variant="outlined"
           />
-        </div>
+        </div> */}
       </Drawer>
     </div>
   )
