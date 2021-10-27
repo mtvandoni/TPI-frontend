@@ -1,7 +1,8 @@
 import React from 'react';
 import './App.css';
 
-import Header from './components/header/Header'
+import Header from './components/header/Header';
+// import Store from './components/store';
 
 const App = () => {
   

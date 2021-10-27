@@ -35,7 +35,8 @@ const Login = () => {
         if (response.data) {
           setUser(response.data.idTipo);
           if (response.data.token) {
-            // window.location.href = redirect || '/home';
+            localStorage.setItem('auth', JSON.stringify(response.data));
+            window.location.href = redirect || '/home';
           }
         }
       })

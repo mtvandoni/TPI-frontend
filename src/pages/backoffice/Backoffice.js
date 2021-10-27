@@ -16,16 +16,23 @@ import {
  import './backoffice.css';
 
  const apiURL = 'https://localhost:44311';
- const token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6Im1pY2FAYWRtaW4uY29tICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIiwibmJmIjoxNjM1Mjg5NzYzLCJleHAiOjE2MzUyOTMzNjMsImlhdCI6MTYzNTI4OTc2M30.Wzp9H5JYPHk5-SUJO0lN_zFeOXi8EaJGP0AQmAGKhrE"
- const headers = { 
-  'Authorization': token,
-};
+
  
-const Backoffice = () => {
+const Backoffice = ({auth}) => {
   const [valuePanel, setValuePanel] = React.useState(0);
   const [selectedFile, setSelectedFile] = React.useState('');
   const [cargaAlumnos, setCargaAlumnos] = React.useState([]);
   const [nCursada, setNCursada] = React.useState('');
+  const [nombre, setNombre] = React.useState('');
+  const [dni, setDni] = React.useState('');
+  const [edad, setEdad] = React.useState('');
+  const [email, setEmail] = React.useState('');
+  const [emailUnlam, setEmailUnlam] = React.useState('');
+
+  const headers = { 
+    'Authorization': auth,
+    'Content-type': 'application/json; charset=iso-8859-1',
+  };
 
   function a11yProps(index) {
     return {
@@ -42,6 +49,31 @@ const Backoffice = () => {
     const value = event.target.value;
     console.log(value);
     setNCursada(value);
+  }
+
+  const handleNombre = (event) => {
+    const value = event.target.value;
+    setNombre(value);
+  }
+
+  const handleDni = (event) => {
+    const value = event.target.value;
+    setDni(value);
+  }
+
+  const handleEdad = (event) => {
+    const value = event.target.value;
+    setEdad(value);
+  }
+
+  const handleEmail = (event) => {
+    const value = event.target.value;
+    setEmail(value);
+  }
+
+  const handleEmailUnlam = (event) => {
+    const value = event.target.value;
+    setEmailUnlam(value);
   }
 
   const convertToJson = (event) => {
@@ -178,8 +210,8 @@ const Backoffice = () => {
                 variant="contained"
                 color="secondary"
                 onClick={() => altaAlumnos()}
-                style={{ width: '7em', height: '2em', marginTop: '0.5em' }}
-              >ALTA
+                style={{ width: '10em', height: '2em', marginTop: '0.5em' }}
+              >ALTA MASIVA
               </Button>
             </div>
             <Divider />
@@ -206,32 +238,32 @@ const Backoffice = () => {
               <TextField
                 className="textField"
                 label="Nombre"
-                // onChange={handleNCursada}
-                // value={nCursada}
+                onChange={handleNombre}
+                value={nombre}
               />
               <TextField
                 className="textField"
                 label="Dni"
-                onChange={handleNCursada}
-                value={nCursada}
+                onChange={handleDni}
+                value={dni}
               />
               <TextField
                 className="textField"
                 label="Edad"
-                // onChange={handleNCursada}
-                // value={nCursada}
+                onChange={handleEdad}
+                value={edad}
               />
               <TextField
                 className="textField"
                 label="Email"
-                // onChange={handleNCursada}
-                // value={nCursada}
+                onChange={handleEmail}
+                value={email}
               />
               <TextField
                 className="textField"
                 label="Email Unlam"
-                // onChange={handleNCursada}
-                // value={nCursada}
+                onChange={handleEmailUnlam}
+                value={emailUnlam}
               />
             </div>
             <div style={{ display: 'flex', justifyContent: 'center', width: '50%' }}>
@@ -241,7 +273,7 @@ const Backoffice = () => {
                 color="secondary"
                 onClick={() => altaAlumnos()}
                 style={{ width: '7em', height: '2em', marginBottom: '2em' }}
-                >ALTA
+                >GUARDAR
                 </Button>
             </div>
             <Divider />

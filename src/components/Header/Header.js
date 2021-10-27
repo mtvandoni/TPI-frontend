@@ -25,9 +25,11 @@ import {
 
 const Header = () => {
   const [user, setUser] = React.useState(null)
-
+  const auth = localStorage.getItem('auth');
   React.useEffect(() => {
-  }, []);
+    setUser(JSON.parse(auth));
+    console.log('header', JSON.parse(auth));
+  }, [auth]);
 
   return(
     <Router>
@@ -60,10 +62,10 @@ const Header = () => {
                 <><Button color="primary" variant="contained" style={{ marginRight: '2em' }}>
                   <Link to="/backoffice">Backoffice</Link>
                 </Button><Tooltip title="Administrador" placement="bottom">
-                    <Avatar sx={{ bgcolor: (user && user === 'admin' ? '#f4a261' : '#e9c46a') }}>AD</Avatar>
+                    <Avatar sx={{ bgcolor: (user?.idTipo === '1' ? '#f4a261' : '#e9c46a') }}>{user ? user.nombre.substr(0, 1) : null}</Avatar>
                   </Tooltip></>
               :
-              <Button color="primary" variant="contained"><Link to="/login">Login</Link></Button>
+              <Button color="primary" variant="contained"><Link to="/login">Logout</Link></Button>
             }
           </Toolbar>
         </AppBar>
@@ -83,7 +85,7 @@ const Header = () => {
             <ExpoProyecto />
           </Route>
           <Route path="/backoffice">
-            <Backoffice />
+            <Backoffice auth={user.token} />
           </Route>
         </Switch>
     </Router>
