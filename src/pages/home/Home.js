@@ -1,4 +1,8 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-empty-pattern */
+/* eslint-disable no-unused-vars */
 import React from 'react';
+import axios from 'axios';
 import './home.css';
 
 import CardCustom from '../../components/card/Card';
@@ -14,8 +18,25 @@ import FoodBankRoundedIcon from '@mui/icons-material/FoodBankRounded';
 import StoreRoundedIcon from '@mui/icons-material/StoreRounded';
 import RepeatRoundedIcon from '@mui/icons-material/RepeatRounded';
 
-const Home = () => {
+const Home = ({auth}) => {
   const [filterCategory, setFilterCategory] = React.useState(''); 
+  const [user, setUser] = React.useState(null);
+  const [proyecto, setProyecto] = React.useState([]);
+  // const auth = JSON.parse(localStorage.getItem('auth'));
+  const headers = { 
+    'Authorization': auth?.token,
+    'Content-type': 'application/json; charset=iso-8859-1',
+  };
+  React.useEffect(() => { 
+    console.log(auth);
+    axios.get("https://localhost:44311/api/proyecto", {headers})
+      .then(response => {
+        setProyecto(response.data);
+        console.log(response.data);
+      });
+
+  }, [])
+
   const handleClickCategory = (title) => {
     setFilterCategory(title);
   };
@@ -36,10 +57,12 @@ const Home = () => {
         justifyContent: 'space-around',
         flexWrap: 'wrap',
         marginBottom: '4em',
+        height: '20vh'
       }}>
-        <CardCustom title='EducApp' body='La app EducApp loremp impsum' category='Educacion' img="https://thumbs.dreamstime.com/b/aprendizaje-electr%C3%B3nico-app-del-vector-49960281.jpg" />
+         Coming Soon...
+        {/*<CardCustom title='EducApp' body='La app EducApp loremp impsum' category='Educacion' img="https://thumbs.dreamstime.com/b/aprendizaje-electr%C3%B3nico-app-del-vector-49960281.jpg" />
         <CardCustom title='MercadoPago' body='La app MercadoPago lorem impsum' category='Fintech' img="https://future.inese.es/wp-content/uploads/2020/02/fintechfuture.jpg" />
-        <CardCustom title='OsdeApp' body='La app OsdeApp lorem impsmum' category='Salud' img="https://www.nalgeneiberia.com/wp-content/uploads/2016/02/1602_Nalgene_blog_5appssalud_01-770x452.jpg" />
+        <CardCustom title='OsdeApp' body='La app OsdeApp lorem impsmum' category='Salud' img="https://www.nalgeneiberia.com/wp-content/uploads/2016/02/1602_Nalgene_blog_5appssalud_01-770x452.jpg" /> */}
       </div>
       <Typography variant="h5" color="text.primary">
         <CategoryOutlinedIcon style={{marginRight: '0.5em'}} />
@@ -51,9 +74,11 @@ const Home = () => {
         justifyContent: 'space-around',
         flexWrap: 'wrap',
         marginBottom: '4em',
-        marginTop: '1em'
+        marginTop: '1em',
+        height: '20vh'
       }}>
-        <Box
+        Coming Soon...
+       {/* <Box
           sx={{
             display: 'flex',
             flexWrap: 'wrap',
@@ -101,7 +126,7 @@ const Home = () => {
               Eco Circular
             </Typography>
           </Paper>
-        </Box>
+        </Box> */}
       </div>
       <div
         style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}
@@ -109,7 +134,7 @@ const Home = () => {
         <Typography variant="h5" color="text.primary">
           {filterCategory}
         </Typography>
-        <div style={{width: '38%'}}>
+       {/*} <div style={{width: '38%'}}>
           <ButtonGroup variant="outlined" aria-label="outlined primary button group">
             <Button variant="contained" style={{height: '4em', width: '8em'}}>WEB</Button>
             <Button style={{height: '4em', width: '8em'}}>MOBILE</Button>
@@ -123,12 +148,12 @@ const Home = () => {
               label="LENGUAJE"
               // onChange={handleChange}
             >
-              <MenuItem value={10}>PHP</MenuItem>
-              <MenuItem value={20}>JAVA</MenuItem>
-              <MenuItem value={30}>REACT</MenuItem>
+              <MenuItem value='php'>PHP</MenuItem>
+              <MenuItem value='java'>JAVA</MenuItem>
+              <MenuItem value='react'>REACT</MenuItem>
             </Select>
           </FormControl>
-        </div>
+        </div> */}
       </div>
       <div style={{
         display: 'flex',
@@ -137,9 +162,11 @@ const Home = () => {
         flexWrap: 'wrap',
         marginBottom: '4em',
       }}>
-        <CardCustom title='FintechApp1' body='lalalalaa FINTECHAPP1 alalala' category='Fintech' img="https://future.inese.es/wp-content/uploads/2020/02/fintechfuture.jpg" />
-        <CardCustom title='FintechApp2' body='lalalalaa FINTECHAPP2 alalala' category='Fintech' img="https://future.inese.es/wp-content/uploads/2020/02/fintechfuture.jpg" />
-        <CardCustom title='FintechApp3' body='lalalalaa FINTECHAPP3 alalala' category='Fintech' img="https://future.inese.es/wp-content/uploads/2020/02/fintechfuture.jpg" />
+        {
+          proyecto && proyecto.map((proy) => (
+            <CardCustom key={proy.idProyecto} title={proy.nombre} data={proy} img={process.env.PUBLIC_URL+proy.rutaFoto} />
+          ))
+        }
       </div>
     </Container>
   )
