@@ -12,7 +12,7 @@ import {
 
 import CloseIcon from '@mui/icons-material/Close';
 
-const ModalEquipoEdit = ({ equipo }) => {
+const ModalEquipoEdit = ({ equipo, disabled }) => {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -61,8 +61,8 @@ const ModalEquipoEdit = ({ equipo }) => {
   
   return (
     <div>
-      <Button onClick={handleClickOpen} color="secondary">
-        Editar
+      <Button onClick={handleClickOpen} color="secondary" disabled={disabled}>
+        {disabled ? 'Ya tiene marca asignada' : 'Agregar Marca'}
       </Button>
       <BootstrapDialog
         onClose={handleClose}
@@ -78,18 +78,24 @@ const ModalEquipoEdit = ({ equipo }) => {
             Editar - {equipo.marca}
           </BootstrapDialogTitle>
           <DialogContent dividers>
-            <TextField
-              label="Nombre Equipo"
-              required
-              name="nombreEquipo"
-              value={equipo.nombreEquipo ? equipo.nombreEquipo : ''}
-            />
-            <TextField
-              label="Marca"
-              required
-              name="nombreEquipo"
-              value={equipo.nombreEquipo ? equipo.nombreEquipo : ''}
-            />
+            <div
+              style={{ display: 'flex', justifyContent: 'center' }}
+            >
+              <TextField
+                label="Nombre Equipo"
+                required
+                name="nombreEquipo"
+                value={equipo.nombreEquipo ? equipo.nombreEquipo : ''}
+                style= {{ marginRight: '1em' }}
+              />
+              <TextField
+                label="Marca"
+                required
+                name="marca"
+                value={equipo.marca ? equipo.marca : ''}
+                style= {{ marginRight: '1em' }}
+              />
+            </div>
           </DialogContent>
           <DialogActions>
             <Button autoFocus onClick={handleClose} variant="contained">

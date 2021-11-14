@@ -55,10 +55,11 @@ const Backoffice = ({auth}) => {
   const [alumnoName, setAlumnoName] = React.useState([]);
   const [profesorName, setProfesorName] = React.useState([]);
   const [value, setValue] = React.useState(new Date('2014-08-18T21:11:54'));
+  const [proyectos, setProyectos] = React.useState([]);
+  const [equipos, setEquipos] = React.useState([]);
+  const [equipoPersona, setEquipoPersona] = React.useState([]);
+  const [rowsEquipos, setRowsEquipos] = React.useState([]);
 
-  const handleChange = (newValue) => {
-    setValue(newValue);
-  };
   const headers = { 
     'Authorization': session().token,
     'Content-type': 'application/json; charset=iso-8859-1',
@@ -87,21 +88,48 @@ const Backoffice = ({auth}) => {
   React.useEffect(() => {
     axios.get(apiURL + '/api/cursada', {headers})
       .then((response) => {
-        setCursada(response.data);
-      });
+        if (response) {
+          setCursada(response.data);
+        }
+    });
 
     axios.get(apiURL + '/api/usuario', {headers})
       .then((response) => {
-        setProfesores(normalizeUsuarios(response.data)[0]);
-        setAlumnos(normalizeUsuarios(response.data)[1]);
-      })
+        const teams = [];
+        if (response) {
+          setProfesores(normalizeUsuarios(response.data)[0]);
+          setAlumnos(normalizeUsuarios(response.data)[1]);
+          teams.push(normalizeUsuarios(response.data)[1]);
+        }
+        axios.get(apiURL + '/api/proyecto', {headers})
+        .then((response) => {
+          if (response) {
+            setProyectos(response.data);
+            teams.push(response.data);
+          }
+          axios.get(apiURL + '/api/equipo', {headers})
+            .then((response) => {
+              if (response) {
+                setEquipos(response.data);
+                teams.push(response.data);
+              } 
+          });
+          axios.get(apiURL + '/api/equipopersona', {headers})
+            .then((response) => {
+              if (response) {
+                setEquipoPersona(response.data);
+                teams.push(response.data);
+              }
+            setRowsEquipos(normalizeTeams(teams));
+          });
+        });
+    });
   }, [upload]);
 
   const normalizeUsuarios = (data) => {
     const object = [];
     const alumnos = [];
     const profesor = [];
-    console.log(data);
     if (data) {
       data.forEach((item) => {
         if (item.idTipo === 3) {
@@ -116,6 +144,48 @@ const Backoffice = ({auth}) => {
     object.push(profesor, alumnos);
     return object;
   }
+
+  const normalizeTeams = (data) => {
+    const alumnos = data[0];
+    const proyectos = data[1];
+    const equipos = data[2];
+    const equipoPersona = data[3];
+
+    const teams = [];
+
+    const asdasd = [];
+    alumnos.forEach((alumno) => {
+      const auxAlumno = equipoPersona.find(equiPer => equiPer.idPersona === alumno.id);
+      if (alumno.id === auxAlumno?.idPersona) {
+        const students = {
+          nombre: alumno.nombre,
+          dni: alumno.dni,
+          idEquipo: auxAlumno.idEquipo
+        };
+        asdasd.push(students);
+      }
+    });
+
+    equipos.forEach((equipo) => {
+      const proAux = proyectos.find(pro => pro.idProyecto === equipo.idProyecto);
+      const team = {
+        id: equipo.idEquipo ? equipo.idEquipo : '',
+        marca :proAux ? proAux.nombre : '',
+        concepto: proAux ? proAux.descripcion : '',
+        valor: 'Valor...',
+        nombreEquipo: equipo.nombre ? equipo.nombre : '',
+        alumnos: [],
+      };
+      teams.push(team);
+    });
+    asdasd.forEach((item) => {
+      const aux = teams.find(team => team.id === item.idEquipo);
+      aux.alumnos.push({ dni: item.dni, nombre: item.nombre});
+    });
+    console.log(teams);
+    return teams;
+    
+  };
 
   function a11yProps(index) {
     return {
@@ -162,7 +232,6 @@ const Backoffice = ({auth}) => {
             })
           }
         })
-        console.log(alumnos);
         setCargaAlumnos(alumnos);
       }
   };
@@ -202,7 +271,6 @@ const Backoffice = ({auth}) => {
       })
       .catch(err => {
         if(err.toString().includes('400')) {
-          console.log('UPS');
           setMessageSnackBar('Usuario existente');
           setSeveritySnackBar('error');
           setOpen(true);
@@ -237,7 +305,6 @@ const Backoffice = ({auth}) => {
       })
       .catch(err => {
         if(err.toString().includes('400')) {
-          console.log('UPS');
           setMessageSnackBar('Usuario existente');
           setSeveritySnackBar('error');
           setOpen(true);
@@ -304,7 +371,6 @@ const Backoffice = ({auth}) => {
       const idAlumno = alumnos.find(al => al.nombre === item);
       equipoPersonas.push({idPersona: idAlumno.id });
     });
-    console.log(equipoPersonas);
     axios.post(apiURL + '/api/equipo', {
       nombre: e.target.nombre.value,
       equipoPersonas
@@ -318,7 +384,7 @@ const Backoffice = ({auth}) => {
     })
   };
 
-  function createData(id, marca, concepto, valor, nombreEquipo) {
+  function createData(id, marca, concepto, valor, nombreEquipo, alumnos) {
     return {
       id,
       marca,
@@ -338,12 +404,6 @@ const Backoffice = ({auth}) => {
     };
   }
 
-  const rowsEquipos = [
-    createData(3, 'WEB TPI', 'Aplicación para la materia Taller Practico Integrador', 'Valor ....', 'Cronos'),
-    createData(4, 'BOMBEROS LA MATANZA', 'Aplicación para siniestros en la zona de la matanza', 'Valor...', 'eBlast'),
-    createData(5, 'ENLAZAR', 'Aplicación para siniestros en la zona de la matanza', 'Valor...', 'Asd'),
-  ];
-
 
   const handleChangeAlumnos = (event) => {
     const {
@@ -353,7 +413,6 @@ const Backoffice = ({auth}) => {
       // On autofill we get a the stringified value.
       typeof value === 'string' ? value.split(',') : value,
     );
-    console.log(typeof value === 'string' ? value.split(',') : value);
   };
 
   const handleChangeProfesores = (event) => {
@@ -793,14 +852,14 @@ function Row(props) {
         <TableCell align="left">{row.marca}</TableCell>
         <TableCell align="left">{row.concepto}</TableCell>
         <TableCell align="left">{row.valor}</TableCell>
-        <TableCell align="left"><ModalEquipoEdit equipo={row} /></TableCell>
+        <TableCell align="left"><ModalEquipoEdit equipo={row} disabled={row.marca ? true : false} /></TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
-              <Typography variant="h6" gutterBottom component="div">
-                Alumnos del equipo: {row.nombreEquipo}
+              <Typography variant="body2" gutterBottom>
+                Participantes
               </Typography>
               <Table size="small" aria-label="purchases">
                 <TableHead>
