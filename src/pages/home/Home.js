@@ -8,7 +8,10 @@ import './home.css';
 import CardCustom from '../../components/card/Card';
 
 import Container from '@mui/material/Container';
-import { Typography, Paper, Box, ButtonGroup, Button, InputLabel, Select, MenuItem, FormControl } from '@mui/material';
+import { Typography,
+  Paper,
+  Box
+} from '@mui/material';
 import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined';
 import LocalFireDepartmentOutlinedIcon from '@mui/icons-material/LocalFireDepartmentOutlined';
 import AttachMoneyRoundedIcon from '@mui/icons-material/AttachMoneyRounded';
@@ -20,9 +23,8 @@ import RepeatRoundedIcon from '@mui/icons-material/RepeatRounded';
 
 import session from '../../services/session';
 
-const Home = ({auth}) => {
+const Home = () => {
   const [filterCategory, setFilterCategory] = React.useState(''); 
-  const [user, setUser] = React.useState(null);
   const [proyecto, setProyecto] = React.useState([]);
   const [proyectoFilter, setProyectoFilter] = React.useState([]);
   const [categorias, setCategorias] = React.useState([]);
@@ -32,6 +34,7 @@ const Home = ({auth}) => {
     'Content-type': 'application/json; charset=iso-8859-1',
   };
   const apiURL = "https://localhost:44311";
+
   React.useEffect(() => { 
     axios.get(apiURL + "/api/proyecto", {headers})
       .then(response => {
@@ -60,7 +63,10 @@ const Home = ({auth}) => {
           }
         });
         setProyecto(object);
+        console.log(object);
       }
+    } else {
+      setProyecto(proyectoFilter);
     }
   };
 
@@ -105,6 +111,7 @@ const Home = ({auth}) => {
           sx={{
             display: 'flex',
             flexWrap: 'wrap',
+            justifyContent: 'center',
             '& > :not(style)': {
               m: 1,
               width: 127,
@@ -122,43 +129,11 @@ const Home = ({auth}) => {
               </Paper>
             ))
           }
-          
-         {/*} <Paper tabIndex="0" elevation={0} className="paperCategory" onClick={() => handleClickCategory('Educación')}>
-            <SchoolRoundedIcon style={{ fontSize: '4.5em'}} />
+          <Paper tabIndex="0" elevation={0} className="paperCategory" onClick={() => handleClickCategory()}>
             <Typography variant="subtitle2" color="inherit">
-              Educación
+              Todos
             </Typography>
           </Paper>
-          <Paper tabIndex="0" elevation={0} className="paperCategory" onClick={() => handleClickCategory('Salud')}>
-            <LocalHospitalRoundedIcon style={{ fontSize: '4.5em'}} />
-            <Typography variant="subtitle2" color="inherit">
-              Salud
-            </Typography>
-          </Paper>
-          <Paper tabIndex="0" elevation={0} className="paperCategory" onClick={() => handleClickCategory('Fintech')}>
-            <AttachMoneyRoundedIcon style={{ fontSize: '4.5em'}} />
-            <Typography variant="subtitle2" color="inherit">
-              Fintech
-            </Typography>
-          </Paper>
-          <Paper tabIndex="0" elevation={0} className="paperCategory" onClick={() => handleClickCategory('Alimentación')}>
-            <FoodBankRoundedIcon style={{ fontSize: '4.5em'}} />
-            <Typography variant="subtitle2" color="inherit">
-              Alimentación
-            </Typography>
-          </Paper>
-          <Paper tabIndex="0" elevation={0} className="paperCategory" onClick={() => handleClickCategory('Ecommerce')}>
-            <StoreRoundedIcon style={{ fontSize: '4.5em'}} />
-            <Typography variant="subtitle2" color="inherit">
-              Ecommerce
-            </Typography>
-          </Paper>
-          <Paper tabIndex="0" elevation={0} className="paperCategory" onClick={() => handleClickCategory('Eco Circular')}>
-            <RepeatRoundedIcon style={{ fontSize: '4.5em'}} />
-            <Typography variant="subtitle2" color="inherit">
-              Eco Circular
-            </Typography>
-          </Paper> */}
         </Box>
       </div>
       <div
@@ -196,9 +171,11 @@ const Home = ({auth}) => {
         marginBottom: '4em',
       }}>
         {
-          proyecto && proyecto.map((proy) => (
+          proyecto.length > 0 ? proyecto.map((proy) => (
             <CardCustom key={proy.idProyecto} title={proy.nombre} data={proy} img={process.env.PUBLIC_URL+proy.rutaFoto} />
-          ))
+          )) : <Typography variant="subtitle2" color="inherit" style={{marginTop: '4em'}}>
+            Por el momento no hay proyectos con esta categoría
+          </Typography>
         }
       </div>
     </Container>
