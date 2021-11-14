@@ -12,6 +12,7 @@ import Home from '../../pages/home/Home';
 import Novedades from '../../pages/novedades/Novedades';
 import ExpoProyecto from '../../pages/expoproyecto/Expoproyecto';
 import Backoffice from '../../pages/backoffice/Backoffice';
+import MiEquipo from '../../pages/miEquipo/MiEquipo';
 import ExitToAppRoundedIcon from '@mui/icons-material/ExitToAppRounded';
 
 import './header.css';
@@ -26,14 +27,19 @@ import {
   Tooltip,
  } from '@mui/material';
 
+import session from '../../services/session';
+import {logout} from '../../services/security';
 const Header = () => {
   const [user, setUser] = React.useState(null)
-  const auth = localStorage.getItem('auth');
+  // const auth = localStorage.getItem('auth');
   React.useEffect(() => {
-    setUser(JSON.parse(auth));
+    // setUser(JSON.parse(auth));
+    console.log('header', session().data);
+    setUser(session().data);
   }, []);
 
   const goLogin =() => {
+    logout();
     window.location.href = '/login';
   };
   return(
@@ -73,7 +79,9 @@ const Header = () => {
                   <Button color="primary" variant="contained" style={{ marginRight: '2em' }}>
                     <Link to="/backoffice">Backoffice</Link>
                   </Button>
-                  : ''
+                  : <Button color="primary" variant="contained" style={{ marginRight: '2em' }}>
+                    <Link to="/miequipo">Mi Equipo</Link>
+                  </Button>
                 }<Tooltip title={user?.idTipo === 1 ? 'Administrador' : 'Alumno'} placement="bottom">
                     <Avatar sx={{ bgcolor: (user?.idTipo === 1 ? '#f4a261' : '#e9c46a') }}>{user ? user.nombre.substr(0, 1).toUpperCase() : null}</Avatar>
                   </Tooltip>
@@ -94,7 +102,7 @@ const Header = () => {
             <Login />
           </Route> */}
           <Route path="/home">
-            <Home auth={user} />
+            <Home />
           </Route>
           <Route path="/novedades">
             <Novedades />
@@ -104,6 +112,9 @@ const Header = () => {
           </Route>
           <Route path="/backoffice">
             <Backoffice auth={user?.token} />
+          </Route>
+          <Route path="/miequipo">
+            <MiEquipo auth={user?.token} />
           </Route>
         </Switch>
     </Router>

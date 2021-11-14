@@ -1,8 +1,16 @@
 .input-file{
-    color: transparent;
-    width: 16em;
+  color: transparent;
+  width: 16em;
 }
 
-.textField {
-    margin-top: 1em!important;
+.css-1m72p6i-MuiPaper-root-MuiDialog-paper {
+  width: 80em!important;
+  max-width: 80em!important;
+}
+
+input[type="date"] {
+  width: 24.8em;
+  height: 4em;
+  border: 1px solid rgb(0 0 0 / 54%);
+  border-radius: 4px;
 }

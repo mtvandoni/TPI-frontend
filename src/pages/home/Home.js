@@ -18,28 +18,52 @@ import FoodBankRoundedIcon from '@mui/icons-material/FoodBankRounded';
 import StoreRoundedIcon from '@mui/icons-material/StoreRounded';
 import RepeatRoundedIcon from '@mui/icons-material/RepeatRounded';
 
+import session from '../../services/session';
+
 const Home = ({auth}) => {
   const [filterCategory, setFilterCategory] = React.useState(''); 
   const [user, setUser] = React.useState(null);
   const [proyecto, setProyecto] = React.useState([]);
-  // const auth = JSON.parse(localStorage.getItem('auth'));
+  const [proyectoFilter, setProyectoFilter] = React.useState([]);
+  const [categorias, setCategorias] = React.useState([]);
+
   const headers = { 
-    'Authorization': auth?.token,
+    'Authorization': session().token,
     'Content-type': 'application/json; charset=iso-8859-1',
   };
+  const apiURL = "https://localhost:44311";
   React.useEffect(() => { 
-    console.log(auth);
-    axios.get("https://localhost:44311/api/proyecto", {headers})
+    axios.get(apiURL + "/api/proyecto", {headers})
       .then(response => {
-        setProyecto(response.data);
         console.log(response.data);
+        setProyectoFilter(response.data);
+        setProyecto(response.data);
+      });
+
+    axios.get(apiURL + "/api/categoria", {headers})
+      .then(response => {
+        console.log(response.data);
+        setCategorias(response.data);
       });
 
   }, [])
 
-  const handleClickCategory = (title) => {
+  const handleClickCategory = (id, title) => {
     setFilterCategory(title);
+
+    const object = [];
+    if (id) {
+      if (proyecto) {
+        proyectoFilter.forEach((item) => {
+          if (item.idCategoria === id) {
+            object.push(item);
+          }
+        });
+        setProyecto(object);
+      }
+    }
   };
+
 
   return(
     <Container maxWidth="xl"
@@ -77,8 +101,7 @@ const Home = ({auth}) => {
         marginTop: '1em',
         height: '20vh'
       }}>
-        Coming Soon...
-       {/* <Box
+      <Box
           sx={{
             display: 'flex',
             flexWrap: 'wrap',
@@ -90,7 +113,17 @@ const Home = ({auth}) => {
             },
           }}
         >
-          <Paper tabIndex="0" elevation={0} className="paperCategory" onClick={() => handleClickCategory('Educación')}>
+          {
+            categorias && categorias.map((cat) => (
+              <Paper tabIndex="0" elevation={0} className="paperCategory" onClick={() => handleClickCategory(cat.idCategoria, cat.descripcion)}>
+                <Typography variant="subtitle2" color="inherit">
+                  {cat.descripcion}
+                </Typography>
+              </Paper>
+            ))
+          }
+          
+         {/*} <Paper tabIndex="0" elevation={0} className="paperCategory" onClick={() => handleClickCategory('Educación')}>
             <SchoolRoundedIcon style={{ fontSize: '4.5em'}} />
             <Typography variant="subtitle2" color="inherit">
               Educación
@@ -125,8 +158,8 @@ const Home = ({auth}) => {
             <Typography variant="subtitle2" color="inherit">
               Eco Circular
             </Typography>
-          </Paper>
-        </Box> */}
+          </Paper> */}
+        </Box>
       </div>
       <div
         style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}
