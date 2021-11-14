@@ -61,7 +61,7 @@ const Login = () => {
               margin="normal"
               required
               fullWidth
-              label="Email"
+              label="Email Universitario"
               name="email"
             />
             <TextField

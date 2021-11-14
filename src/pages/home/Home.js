@@ -172,7 +172,7 @@ const Home = () => {
       }}>
         {
           proyecto.length > 0 ? proyecto.map((proy) => (
-            <CardCustom key={proy.idProyecto} title={proy.nombre} data={proy} img={process.env.PUBLIC_URL+proy.rutaFoto} />
+            <CardCustom key={proy.idProyecto} type="proyecto" title={proy.nombre} data={proy} img={process.env.PUBLIC_URL+proy.rutaFoto} />
           )) : <Typography variant="subtitle2" color="inherit" style={{marginTop: '4em'}}>
             Por el momento no hay proyectos con esta categoría
           </Typography>

@@ -24,7 +24,7 @@ import ChatIcon from '@mui/icons-material/Chat';
 import Carousel from 'react-material-ui-carousel'
 import './card.css';
 
-const CardCustom = ({data, title, body, category, img}) => {
+const CardCustom = ({type, data, title, descripcion, category, img}) => {
   const [openDrawer, setOpenDrawer ] = React.useState(false);
   const [valuePanel, setValuePanel] = React.useState(0);
 
@@ -73,22 +73,25 @@ const CardCustom = ({data, title, body, category, img}) => {
         />
         <CardContent>
           <Typography variant="h5">
-            {data?.nombre}
+            { type === 'proyecto' ? data?.nombre : title}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            {data?.descripcion}
+            { type === 'proyecto' ? data?.descripcion : descripcion}
           </Typography>
           {/* <div className="badge">{category}</div> */}
         </CardContent>
         <CardActions>
-          <div style={{flexGrow: 1 }} >
-          <Tooltip title="Me gusta">
-            <IconButton style={{marginRight: '1em'}}><FavoriteIcon/></IconButton>
-            </Tooltip>
-            <Tooltip title="Comentarios">
-              <IconButton><ChatIcon/></IconButton>
-            </Tooltip>
-          </div>
+          { type === 'proyecto' ?
+          
+            <div style={{flexGrow: 1 }} >
+              <Tooltip title="Me gusta">
+                <IconButton style={{marginRight: '1em'}}><FavoriteIcon/></IconButton>
+              </Tooltip>
+               <Tooltip title="Comentarios">
+                <IconButton><ChatIcon/></IconButton>
+              </Tooltip>
+            </div> : null
+          }
           <div style={{flexGrow: 1 }} >
             <Tooltip title="Mas info">
               <IconButton onClick={toggleDrawer(true)} style={{float: 'right'}}>
@@ -120,8 +123,10 @@ const CardCustom = ({data, title, body, category, img}) => {
               indicatorColor="secondary"
             >
               <Tab label="Información" {...a11yProps(0)} style={{marginRight: '1em'}} />
-              <Tab label="Entregas" {...a11yProps(1)} />
-              <Tab label="Equipo" {...a11yProps(2)} />
+              { type === 'proyecto' ?
+                <><Tab label="Entregas" {...a11yProps(1)} /><Tab label="Equipo" {...a11yProps(2)} /></>
+                : null
+              }
             </Tabs>
           </Box>
           <TabPanel value={valuePanel} index={0}>
@@ -134,9 +139,11 @@ const CardCustom = ({data, title, body, category, img}) => {
           <Typography variant="body2">
             {data?.descripcion}
           </Typography>
-          <Stack direction="row" spacing={1} style={{marginTop: '2em'}}>
-            <Chip label={data?.idTipoProyecto === 1 ? 'WEB' : 'MOBILE'} color="secondary" size="small"/>
-          </Stack>
+          { type === 'proyecto' ?
+            <Stack direction="row" spacing={1} style={{marginTop: '2em'}}>
+              <Chip label={data?.idTipoProyecto === 1 ? 'WEB' : 'MOBILE'} color="secondary" size="small"/>
+            </Stack> : null
+          }
           </TabPanel>
           <TabPanel value={valuePanel} index={1}>
             Coming Soon...

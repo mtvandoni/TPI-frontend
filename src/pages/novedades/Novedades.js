@@ -17,9 +17,9 @@ const Novedades = () => {
         flexWrap: 'wrap',
         marginBottom: '4em',
       }}>
-        <CardCustom title='NOVEDAD 1' body='lalalalaa NOVEDAD 1 alalala' category='ExpoProyecto' img="https://prensaobrera.com/wp-content/uploads/Unlam-1.jpg" />
-        <CardCustom title='NOVEDAD 2' body='lalalalaa NOVEDAD 2 alalala' category='ExpoProyecto' img="https://prensaobrera.com/wp-content/uploads/Unlam-1.jpg" />
-        <CardCustom title='NOVEDAD 3' body='lalalalaa NOVEDAD 3 alalala' category='ExpoProyecto' img="https://prensaobrera.com/wp-content/uploads/Unlam-1.jpg" />
+        <CardCustom type="novedad" title='NOVEDAD 1' descripcion='lalalalaa NOVEDAD 1 alalala' category='ExpoProyecto' img="https://prensaobrera.com/wp-content/uploads/Unlam-1.jpg" />
+        <CardCustom type="novedad" title='NOVEDAD 2' descripcion='lalalalaa NOVEDAD 2 alalala' category='ExpoProyecto' img="https://prensaobrera.com/wp-content/uploads/Unlam-1.jpg" />
+        <CardCustom type="novedad" title='NOVEDAD 3' descripcion='lalalalaa NOVEDAD 3 alalala' category='ExpoProyecto' img="https://prensaobrera.com/wp-content/uploads/Unlam-1.jpg" />
       </div>
     </Container>
   )

@@ -88,7 +88,6 @@ const Backoffice = ({auth}) => {
     axios.get(apiURL + '/api/cursada', {headers})
       .then((response) => {
         setCursada(response.data);
-        console.log(response.data);
       });
 
     axios.get(apiURL + '/api/usuario', {headers})
@@ -179,7 +178,6 @@ const Backoffice = ({auth}) => {
       });
   };
 
-
   const altaAlumnoIndividual = (e) => {
     e.preventDefault();
     const object = {
@@ -198,6 +196,8 @@ const Backoffice = ({auth}) => {
           setMessageSnackBar('Usuario creado correctamente');
           setSeveritySnackBar('success');
           setOpen(true);
+          setUpload(!upload);
+          setUpload(!upload);
         }
       })
       .catch(err => {
