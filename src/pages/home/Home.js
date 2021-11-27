@@ -10,7 +10,8 @@ import CardCustom from '../../components/card/Card';
 import Container from '@mui/material/Container';
 import { Typography,
   Paper,
-  Box
+  Box,
+  Grid,
 } from '@mui/material';
 import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined';
 import LocalFireDepartmentOutlinedIcon from '@mui/icons-material/LocalFireDepartmentOutlined';
@@ -28,6 +29,7 @@ const Home = () => {
   const [proyecto, setProyecto] = React.useState([]);
   const [proyectoFilter, setProyectoFilter] = React.useState([]);
   const [categorias, setCategorias] = React.useState([]);
+  const [masVotados, setMasVotados] = React.useState([]);
 
   const headers = { 
     'Authorization': session().token,
@@ -38,41 +40,137 @@ const Home = () => {
   React.useEffect(() => { 
     axios.get(apiURL + "/api/proyecto", {headers})
       .then(response => {
-        console.log(response.data);
-        setProyectoFilter(response.data);
-        setProyecto(response.data);
-      });
+        const team = [];
+        // setProyectoFilter(response.data);
+        // setProyecto(response.data);
+        team.push(response.data);
+        axios.get(apiURL + '/api/equipopersona', {headers})
+          .then((response) => {
+            if (response) {
+              team.push(response.data);
+            }
+            
+            axios.get(apiURL + '/api/equipo', {headers})
+            .then((response) => {
+              if (response) {
+                team.push(response.data);
+              }
 
+            axios.get(apiURL + '/api/usuario', {headers})
+              .then((response) => {
+                if (response) {
+                  team.push(response.data);
+              setProyectoFilter(normalizeProyectos(team));
+              setProyecto(normalizeProyectos(team));
+              setMasVotados(getMasVotados(team));
+                }
+              });
+            });
+          });
+        });
     axios.get(apiURL + "/api/categoria", {headers})
       .then(response => {
-        console.log(response.data);
         setCategorias(response.data);
       });
-
   }, [])
 
   const handleClickCategory = (id, title) => {
     setFilterCategory(title);
-
+    console.log(id,title);
     const object = [];
     if (id) {
       if (proyecto) {
         proyectoFilter.forEach((item) => {
-          if (item.idCategoria === id) {
+          console.log('item', item.data);
+          if (item.data?.idCategoria === id) {
             object.push(item);
           }
         });
         setProyecto(object);
-        console.log(object);
       }
     } else {
       setProyecto(proyectoFilter);
     }
   };
 
+  const normalizeProyectos = (data) => {
+    if (data) {
+      const proyectos = data[0];
+      const equiposPersonas = data[1];
+      const equipos = data[2];
+      const usuarios = data[3];
+      const personas = [];
+
+      const all = [];
+
+      const asdasd = [];
+
+      usuarios.forEach((usuario) => {
+        const auxAlumno = equiposPersonas.find(equiPer => equiPer.idPersona === usuario.id);
+        if (usuario.id === auxAlumno?.idPersona) {
+          const participants = {
+            nombre: usuario.nombre,
+            idTipo: usuario.idTipo,
+            edad: usuario.edad,
+            emailUnlam: usuario.emailUnlam,
+            idEquipo: auxAlumno.idEquipo,
+          };
+          asdasd.push(participants);
+        }
+      });
+
+      equipos.forEach((equipo) => {
+        const proAux = proyectos.find(pro => pro.idProyecto === equipo.idProyecto);
+        if (proAux !== undefined) {
+          const proyect = {
+            id: equipo.idEquipo ? equipo.idEquipo : '',
+            data: proAux,
+            participantes: [],
+          };
+          all.push(proyect);
+        }
+      })
+      asdasd.forEach((item) => {
+        const aux = all.find(x => x?.id === item.idEquipo);
+        aux?.participantes?.push({ nombre: item.nombre, idTipo: item.idTipo, edad: item.edad, emailUnlam: item.emailUnlam});
+      })
+
+      return all;
+    }
+  };
+
+  const getMasVotados = (data) => {
+    const proyectos = data[0]
+    const masVotados = [];
+    const todo = [];
+    if (proyectos) {
+      proyectos.forEach((item) => {
+       todo.push(item.cantMeGusta);
+      })
+    }
+    
+    const aux = todo.sort(function (a, b) { return b - a; }).slice(0, 2);
+    masVotados.push(aux);
+    
+    const array = [];
+    masVotados.forEach((item) => {
+      if (item) {
+        const aux = proyectos.find(x => x.cantMeGusta === item);
+        if (aux) {
+          console.log('asd');
+        }
+        array.push(aux);
+      }
+    });
+    console.log('array', array);
+    data[0] = array;
+    console.log(data);
+    // TODO mas votados
+    // return normalizeProyectos(data);
+  };
 
   return(
-    <Container maxWidth="xl"
+    <Container container maxWidth="xl"
       style={{
         padding: '4em',
       }}
@@ -123,14 +221,14 @@ const Home = () => {
           {
             categorias && categorias.map((cat) => (
               <Paper tabIndex="0" elevation={0} className="paperCategory" onClick={() => handleClickCategory(cat.idCategoria, cat.descripcion)}>
-                <Typography variant="subtitle2" color="inherit">
+                <Typography variant="subtitle2" color="inherit" style={{marginTop: '3em'}}>
                   {cat.descripcion}
                 </Typography>
               </Paper>
             ))
           }
           <Paper tabIndex="0" elevation={0} className="paperCategory" onClick={() => handleClickCategory()}>
-            <Typography variant="subtitle2" color="inherit">
+            <Typography variant="subtitle2" color="inherit" style={{marginTop: '3em'}}>
               Todos
             </Typography>
           </Paper>
@@ -140,28 +238,8 @@ const Home = () => {
         style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}
       >
         <Typography variant="h5" color="text.primary">
-          {filterCategory}
+          {filterCategory ? filterCategory : 'Todos'}
         </Typography>
-       {/*} <div style={{width: '38%'}}>
-          <ButtonGroup variant="outlined" aria-label="outlined primary button group">
-            <Button variant="contained" style={{height: '4em', width: '8em'}}>WEB</Button>
-            <Button style={{height: '4em', width: '8em'}}>MOBILE</Button>
-          </ButtonGroup>
-          <FormControl style={{width: '50%', marginLeft: '1em'}} >
-            <InputLabel id="demo-simple-select-label">LENGUAJE</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              // value={age}
-              label="LENGUAJE"
-              // onChange={handleChange}
-            >
-              <MenuItem value='php'>PHP</MenuItem>
-              <MenuItem value='java'>JAVA</MenuItem>
-              <MenuItem value='react'>REACT</MenuItem>
-            </Select>
-          </FormControl>
-        </div> */}
       </div>
       <div style={{
         display: 'flex',
@@ -172,11 +250,17 @@ const Home = () => {
       }}>
         {
           proyecto.length > 0 ? proyecto.map((proy) => (
-            <CardCustom key={proy.idProyecto} type="proyecto" title={proy.nombre} data={proy} img={process.env.PUBLIC_URL+proy.rutaFoto} />
+            <CardCustom
+              key={proy?.data?.idProyecto}
+              type="proyecto"
+              data={proy?.data}
+              participantes={proy?.participantes}
+              img={process.env.PUBLIC_URL+proy?.data?.rutaFoto ? proy?.data?.rutaFoto : 'noImage.png'}
+            />
           )) : <Typography variant="subtitle2" color="inherit" style={{marginTop: '4em'}}>
             Por el momento no hay proyectos con esta categoría
           </Typography>
-        }
+          }
       </div>
     </Container>
   )

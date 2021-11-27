@@ -18,6 +18,7 @@ session.login = (user, data) => {
     token: data.token,
     data: data,                                  
     user,
+    usuario: data
   });
 };
 

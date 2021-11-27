@@ -1,13 +1,31 @@
 import React from 'react';
 import {Container} from '@mui/material';
+import axios from 'axios';
 
 import CardCustom from '../../components/card/Card';
 
+import session from '../../services/session';
+const apiURL = 'https://localhost:44311';
+
 const Novedades = () => {
+  const [novedades, setNovedades] = React.useState([]);
+
+  const headers = { 
+    'Authorization': session().token,
+    'Content-type': 'application/json; charset=iso-8859-1',
+  };
+
+  React.useEffect(() => {
+    axios.get(apiURL + '/api/novedad', {headers}).then((response) => {
+      setNovedades(response.data);
+    });
+  }, []);
+
   return(
     <Container maxWidth="xl"
       style={{
         padding: '4em',
+        height: '100vh'
       }}
     >
       <div style={{
@@ -17,9 +35,9 @@ const Novedades = () => {
         flexWrap: 'wrap',
         marginBottom: '4em',
       }}>
-        <CardCustom type="novedad" title='NOVEDAD 1' descripcion='lalalalaa NOVEDAD 1 alalala' category='ExpoProyecto' img="https://prensaobrera.com/wp-content/uploads/Unlam-1.jpg" />
-        <CardCustom type="novedad" title='NOVEDAD 2' descripcion='lalalalaa NOVEDAD 2 alalala' category='ExpoProyecto' img="https://prensaobrera.com/wp-content/uploads/Unlam-1.jpg" />
-        <CardCustom type="novedad" title='NOVEDAD 3' descripcion='lalalalaa NOVEDAD 3 alalala' category='ExpoProyecto' img="https://prensaobrera.com/wp-content/uploads/Unlam-1.jpg" />
+        { novedades && novedades.map((novedad) => (
+          <CardCustom type="novedad" descripcion={novedad.descripcion} img={novedad.rutaFoto} enabledComment="no" video={novedad.rutaVideo}/>
+        ))} 
       </div>
     </Container>
   )

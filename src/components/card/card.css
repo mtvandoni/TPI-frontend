@@ -19,17 +19,30 @@ div .cardPerson {
   margin-bottom: 8em!important;
 }
 
-.cardPerson:last-child {
-  background-color: #2A9D8F!important;
-}
 
 .typoCardPerson {
   position: absolute!important;
   top: 1.6em!important;
-  left: 1.4em!important;
+  left: 1.7em!important;
 }
 
 .cardPerson .description{
   margin-top: 11em!important;
   text-align: center!important;
+}
+
+
+.video-responsive {
+  overflow: hidden;
+  padding-bottom: 56.25%;
+  position: relative;
+  height: 0;
+}
+
+.video-responsive iframe {
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  position: absolute;
 }

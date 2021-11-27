@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 import { styled } from '@mui/material/styles';
 import {
   Typography,
@@ -8,12 +9,41 @@ import {
   DialogActions,
   DialogTitle,
   TextField,
-  IconButton} from '@mui/material';
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  IconButton } from '@mui/material';
 
 import CloseIcon from '@mui/icons-material/Close';
 
-const ModalEquipoEdit = ({ equipo, disabled }) => {
+import session from '../../../services/session';
+const apiURL = 'https://localhost:44311';
+
+const ModalEquipoEdit = ({ equipo, disabled, handleEdicionEquipo }) => {
   const [open, setOpen] = React.useState(false);
+  const [tipoProyectoValue, setTipoProyectoValue] = React.useState('');
+  const [tipoProyecto, setTipoProyecto] = React.useState([]);
+  const [categoria, setCategoria] = React.useState([]);
+
+  const headers = { 
+    'Authorization': session().token,
+    'Content-type': 'application/json; charset=iso-8859-1',
+  };
+
+  React.useEffect(() => {
+    axios.get(apiURL + '/api/tipoProyecto', {headers}).then((response) => {
+      if (response) {
+        setTipoProyecto(response.data);
+      }
+    });
+
+    axios.get(apiURL + '/api/categoria', {headers}).then((response) => {
+      if (response) {
+        setCategoria(response.data);
+      }
+    })
+  }, []);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -55,50 +85,127 @@ const ModalEquipoEdit = ({ equipo, disabled }) => {
     );
   };
 
-  const submitEdit = () => {
-
+  const submitEdit = (e) => {
+    e.preventDefault();
+    return e;
   };
   
   return (
     <div>
-      <Button onClick={handleClickOpen} color="secondary" disabled={disabled}>
-        {disabled ? 'Ya tiene marca asignada' : 'Agregar Marca'}
+      <Button onClick={handleClickOpen} color="secondary" >
+        {disabled ? 'Editar equipo' : 'Agregar Marca'}
       </Button>
       <BootstrapDialog
         onClose={handleClose}
         aria-labelledby="customized-dialog-title"
         open={open}
-        stile={{ width: '80em'}}
+        className="editModal"
       >
         <form
-          onSubmit={submitEdit}
+          onSubmit={handleEdicionEquipo(submitEdit)}
           name="equipo"
         >
           <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
-            Editar - {equipo.marca}
+            Editar - {equipo.nombreEquipo}
           </BootstrapDialogTitle>
           <DialogContent dividers>
             <div
-              style={{ display: 'flex', justifyContent: 'center' }}
+              style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}
             >
+              <input name="idEquipo" defaultValue={equipo.id} hidden/>
+              <input name="type" defaultValue={disabled ? 'Edit' : 'Add'} hidden/>
+              <input name="idProyecto" defaultValue={equipo.idProyecto ? equipo.idProyecto : null} hidden/>
               <TextField
                 label="Nombre Equipo"
                 required
                 name="nombreEquipo"
-                value={equipo.nombreEquipo ? equipo.nombreEquipo : ''}
+                defaultValue={equipo.nombreEquipo ? equipo.nombreEquipo : ''}
                 style= {{ marginRight: '1em' }}
               />
               <TextField
                 label="Marca"
                 required
-                name="marca"
-                value={equipo.marca ? equipo.marca : ''}
+                name="nombre"
+                defaultValue={equipo.marca ? equipo.marca : null}
                 style= {{ marginRight: '1em' }}
               />
+              <TextField
+                label="Concepto"
+                required
+                name="descripcion"
+                defaultValue={equipo.concepto ? equipo.concepto : null}
+                style= {{ marginRight: '1em', width: '50%' }}
+              />
+                <TextField
+                label="Propuesta de valor"
+                required
+                name="propuestaValor"
+                defaultValue={equipo.valor ? equipo.valor : null}
+                style= {{ marginRight: '1em', width: '32em', marginTop: '1em' }}
+              />
+              <FormControl
+                style= {{ width: '13em', marginTop: '1em', marginRight: '1em'}}
+              >
+                <InputLabel id="demo-simple-select-label">Tipo Proyecto</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  label="Tipo Proyecto"
+                  name="tipoProyecto"
+                  defaultValue={equipo.idTipoProyecto ? equipo.idTipoProyecto : ''}
+                >
+                  {
+                    tipoProyecto && tipoProyecto.map((tipo) => (
+                      <MenuItem
+                        key={tipo.idTipoProyecto}
+                        value={tipo.idTipoProyecto}
+                      >
+                        {tipo.descripcion}
+                      </MenuItem>
+                    ))
+                  }
+                </Select>
+              </FormControl>
+              <FormControl
+                style= {{ width: '13em', marginTop: '1em'}}
+              >
+                <InputLabel id="demo-simple-select-label">Categoria</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label-cat"
+                  label="categoria"
+                  name="categoria"
+                  defaultValue={equipo.idCategoria ? equipo.idCategoria : null}
+                >
+                  {
+                    categoria && categoria.map((cat) => (
+                      <MenuItem
+                        key={cat.idCategoria}
+                        value={cat.idCategoria}
+                      >
+                        {cat.descripcion}
+                      </MenuItem>
+                    ))
+                  }
+                </Select>
+              </FormControl>
+              <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    style={{marginBottom: '1em'}}
+                  >Seleccione la imagen principal para el proyecto</Typography>
+                  <Button
+                    variant="raised"
+                    component="label"
+                  >
+                    <input
+                      type="file"
+                      name="foto"
+                     // hidden
+                    />
+                  </Button>
             </div>
           </DialogContent>
           <DialogActions>
-            <Button autoFocus onClick={handleClose} variant="contained">
+            <Button type="submit" autoFocus variant="contained">
               Guardar
             </Button>
           </DialogActions>

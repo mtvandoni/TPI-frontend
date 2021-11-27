@@ -29,6 +29,7 @@ import {
   OutlinedInput,
   Chip,
   MenuItem,
+  Tooltip,
  } from '@mui/material';
  import IconButton from '@mui/material/IconButton';
  import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -37,9 +38,22 @@ import {
  import './backoffice.css';
  import session from '../../services/session';
  import ModalEquipoEdit from './components/ModalEquipoEdit';
+ import ModalEquipoDelete from './components/ModalEquipoDelete';
+ import ModalEquipoDisabled from './components/ModalEquipoDisabled';
 
+ import DoNotDisturbAltIcon from '@mui/icons-material/DoNotDisturbAlt';
+ import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlineRounded';
+ import ReactExport from "react-export-excel";
+
+  const ExcelFile = ReactExport.ExcelFile;
+  const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
+  const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
+ 
  const apiURL = 'https://localhost:44311';
-
+ const headers = { 
+  'Authorization': session().token,
+  'Content-type': 'application/json; charset=iso-8859-1',
+};
  
 const Backoffice = ({auth}) => {
   const [valuePanel, setValuePanel] = React.useState(0);
@@ -60,11 +74,6 @@ const Backoffice = ({auth}) => {
   const [equipoPersona, setEquipoPersona] = React.useState([]);
   const [rowsEquipos, setRowsEquipos] = React.useState([]);
 
-  const headers = { 
-    'Authorization': session().token,
-    'Content-type': 'application/json; charset=iso-8859-1',
-  };
-
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;
   const MenuProps = {
@@ -75,15 +84,6 @@ const Backoffice = ({auth}) => {
       },
     },
   };
-
-  function getStyles(name, personName, theme) {
-    return {
-      fontWeight:
-        personName.indexOf(name) === -1
-          ? theme.typography.fontWeightRegular
-          : theme.typography.fontWeightMedium,
-    };
-  }
 
   React.useEffect(() => {
     axios.get(apiURL + '/api/cursada', {headers})
@@ -150,6 +150,7 @@ const Backoffice = ({auth}) => {
     const proyectos = data[1];
     const equipos = data[2];
     const equipoPersona = data[3];
+    console.log(proyectos);
 
     const teams = [];
 
@@ -172,17 +173,22 @@ const Backoffice = ({auth}) => {
         id: equipo.idEquipo ? equipo.idEquipo : '',
         marca :proAux ? proAux.nombre : '',
         concepto: proAux ? proAux.descripcion : '',
-        valor: 'Valor...',
+        valor: proAux ? proAux.propuestaValor : '',
         nombreEquipo: equipo.nombre ? equipo.nombre : '',
         alumnos: [],
+        idProyecto: proAux ? proAux.idProyecto : '',
+        idTipoProyecto: proAux ? proAux.idTipoProyecto : '',
+        idCategoria: proAux ? proAux.idCategoria : '',
       };
       teams.push(team);
     });
+    console.log('teams', teams);
+
     asdasd.forEach((item) => {
       const aux = teams.find(team => team.id === item.idEquipo);
       aux.alumnos.push({ dni: item.dni, nombre: item.nombre});
     });
-    console.log(teams);
+    
     return teams;
     
   };
@@ -229,6 +235,7 @@ const Backoffice = ({auth}) => {
               edad: row.edad,
               idTipo: 3,
               IdCursada: cursada.idCursada,
+              estado: 'S',
             })
           }
         })
@@ -256,7 +263,8 @@ const Backoffice = ({auth}) => {
       email: e.target.email.value,
       emailUnlam: e.target.emailunlam.value,
       idTipo: 3,
-      idCursada: cursada.idCursada
+      idCursada: cursada.idCursada,
+      estado: 'S',
     };
 
     axios.post(apiURL + '/api/usuario', object, {headers})
@@ -293,6 +301,7 @@ const Backoffice = ({auth}) => {
       emailUnlam: e.target.emailunlam.value,
       descripcion: e.target.descripcion.value,
       idTipo: 2,
+      estado: 'S',
     };
 
     axios.post(apiURL + '/api/usuario', object, {headers})
@@ -373,8 +382,13 @@ const Backoffice = ({auth}) => {
     });
     axios.post(apiURL + '/api/equipo', {
       nombre: e.target.nombre.value,
-      equipoPersonas
+      equipoPersonas: equipoPersonas,
     }, {headers}).then((response) => {
+        
+        setMessageSnackBar('Alta de equipo generado correctamente');
+        setSeveritySnackBar('success');
+        setOpen(true);
+        setUpload(!upload);
       if (response) {
         setMessageSnackBar('Alta de equipo generado correctamente');
           setSeveritySnackBar('success');
@@ -384,28 +398,50 @@ const Backoffice = ({auth}) => {
     })
   };
 
-  function createData(id, marca, concepto, valor, nombreEquipo, alumnos) {
-    return {
-      id,
-      marca,
-      concepto,
-      valor,
-      nombreEquipo,
-      alumnos: [
-        {
-          dni: '39347706',
-          nombre: 'Micaela Vandoni',
-        },
-        {
-          dni: '18446058',
-          nombre: 'Anonymous',
-        },
-      ],
-    };
-  }
+  const submitNuevaCategoria = (e) => {
+    e.preventDefault();
+    axios.post(apiURL + '/api/categoria', {descripcion: e.target.descripcion.value}, {headers}).then((response) => {
+      if (response) {
+        setMessageSnackBar('Nueva categoría generada correctamente');
+        setSeveritySnackBar('success');
+        setOpen(true);
+        setUpload(!upload);
+      }
+    });
+  };
 
+  const submitNuevoTipoProyecto = (e) => {
+    e.preventDefault();
+    axios.post(apiURL + '/api/tipoproyecto', {descripcion: e.target.descripcion.value}, {headers}).then((response) => {
+      if (response) {
+        setMessageSnackBar('Nuevo tipo de proyecto generado correctamente');
+        setSeveritySnackBar('success');
+        setOpen(true);
+        setUpload(!upload);
+      }
+    });
+  };
+
+  const submitNuevaNovedad = (e) => {
+    e.preventDefault();
+    const obj = {
+      descripcion: e.target.descripcion.value,
+      rutaFoto: e.target.foto.value.substr(12, e.target.foto.value.length - 1),
+      idPersona: session().data.id,
+      rutaVideo: e.target.rutaVideo.value,
+    };
+    axios.post(apiURL + '/api/novedad', obj, {headers}).then((response) => {
+      if (response) {
+        setMessageSnackBar('Nueva novedad generada correctamente');
+        setSeveritySnackBar('success');
+        setOpen(true);
+        setUpload(!upload);
+      }
+    });
+  };
 
   const handleChangeAlumnos = (event) => {
+    event.preventDefault();
     const {
       target: { value },
     } = event;
@@ -416,6 +452,7 @@ const Backoffice = ({auth}) => {
   };
 
   const handleChangeProfesores = (event) => {
+    event.preventDefault();
     const {
       target: { value },
     } = event;
@@ -423,6 +460,21 @@ const Backoffice = ({auth}) => {
       // On autofill we get a the stringified value.
       typeof value === 'string' ? value.split(',') : value,
     );
+  };
+
+  const disabledAlumno = (e, estado, id) => {
+    e.preventDefault();
+    if (estado === 'S') {
+      axios.put(apiURL + '/api/usuario/deshabilitarusuario', {id: id}, {headers}).then((response) => {
+        setUpload(!upload);
+        setUpload(!upload);
+      });
+    } else {
+      axios.put(apiURL + '/api/usuario/habilitarusuario', {id: id}, {headers}).then((response) => {
+        setUpload(!upload);
+        setUpload(!upload);
+      });
+    }
   };
 
 
@@ -508,9 +560,124 @@ const Backoffice = ({auth}) => {
                   </Button>
                 </form>
               </div>
-            <Divider />
+            <Divider /><br />
+            <Typography variant="h5" color="text.secondary">Nueva Categoría</Typography><br />
+            <Typography variant="body2" color="text.secondary">Ingrese el nombre de la nueva categoría para luego asignarla a un proyecto</Typography>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                width: '50%',
+                marginTop: '2em',
+                marginBottom: '2em',
+              }}>
+                <form
+                  style={{ width: '50%' }}
+                 onSubmit={submitNuevaCategoria}
+                  name="categoria"
+                >
+                  <TextField
+                    label="Nombre Categoria"
+                    required
+                    fullWidth
+                    name="descripcion"
+                  />
+                  <Button
+                    fullWidth
+                    variant="contained"
+                    color="secondary"
+                    type="submit"
+                    sx={{ mt: 3, mb: 2 }}
+                    >GUARDAR CATEGORÍA
+                    </Button>
+                </form>
+            </div>
+            <Divider /><br />
+            <Typography variant="h5" color="text.secondary">Nuevo Tipo de Proyecto</Typography><br />
+            <Typography variant="body2" color="text.secondary">Ingrese el nombre del tipo de proyecto</Typography>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                width: '50%',
+                marginTop: '2em',
+                marginBottom: '2em',
+              }}>
+                <form
+                  style={{ width: '50%' }}
+                 onSubmit={submitNuevoTipoProyecto}
+                  name="categoria"
+                >
+                  <TextField
+                    label="Nombre Tipo de Proyecto"
+                    required
+                    fullWidth
+                    name="descripcion"
+                  />
+                  <Button
+                    fullWidth
+                    variant="contained"
+                    color="secondary"
+                    type="submit"
+                    sx={{ mt: 3, mb: 2 }}
+                    >GUARDAR TIPO PROYECTO
+                    </Button>
+                </form>
+            </div>
           </TabPanel>
           <TabPanel value={valuePanel} index={1}>
+          <Typography variant="h5" color="text.secondary">Tabla de Alumnos</Typography><br />
+            <Typography variant="body2" color="text.secondary">Información de alumnos - Puede habilitarlos o deshabilitarlos</Typography><br />
+            <ExcelFile
+              filename="Alumnos"
+              element={<Button style={{ float: 'right'}} size="small" variant="contained" color="secondary">Exportar excel</Button>}
+            >
+                <ExcelSheet data={alumnos} name="Alumnos">
+                    <ExcelColumn label="Alumno" value="nombre"/>
+                    <ExcelColumn label="DNI" value="dni"/>
+                    <ExcelColumn label="email" value="email"/>
+                </ExcelSheet>
+            </ExcelFile>
+            <TableContainer component={Paper}  sx={{ maxHeight: 350, marginTop: '3em' }}>
+              <Table stickyHeader aria-label="sticky table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell align="left">Alumno</TableCell>
+                    <TableCell align="left">DNI</TableCell>
+                    <TableCell align="left">Email</TableCell>
+                    <TableCell align="center">Acción</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                {alumnos.map((row) => (
+                  <TableRow
+                    key={row.name}
+                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                  >
+                    <TableCell  component="th" scope="row">
+                      {row.nombre}
+                    </TableCell>
+                    <TableCell align="left">{row.dni}</TableCell>
+                    <TableCell align="left">{row.email}</TableCell>
+                    <TableCell align="center">
+                    <Button onClick={(e) => disabledAlumno(e, row.estado, row.id)} color="secondary">
+                      {row.estado === 'S' ?
+                        <Tooltip title="Deshabilitar">
+                          <DoNotDisturbAltIcon color="error"/>
+                        </Tooltip> :
+                        <Tooltip title="Habilitar">
+                          <CheckCircleOutlineRoundedIcon color="success" />
+                        </Tooltip>
+                        }
+                      
+                    </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+                </TableBody>
+              </Table>
+            </TableContainer><br />  
+            <Divider /> <br />
           <Typography variant="h5" color="text.secondary">Alta de profesor</Typography><br />
             <Typography variant="body2" color="text.secondary">Complete los campos para poder dar de alta a un profesor</Typography>
             <form
@@ -690,7 +857,18 @@ const Backoffice = ({auth}) => {
           <TabPanel value={valuePanel} index={2}>
             <Typography variant="h5" color="text.secondary">Tabla de Equipos</Typography><br />
             <Typography variant="body2" color="text.secondary">Información de equipos - Puede editarlos y asignarle un proyecto</Typography><br />
-            <TableContainer component={Paper}>
+            <ExcelFile
+              filename="Equipos"
+              element={<Button style={{ float: 'right'}} size="small" variant="contained" color="secondary">Exportar excel</Button>}
+            >
+                <ExcelSheet data={rowsEquipos} name="Equipos">
+                    <ExcelColumn label="Marca" value="marca"/>
+                    <ExcelColumn label="Concepto" value="concepto"/>
+                    <ExcelColumn label="Propuesta de Valor" value="valor"/>
+                    <ExcelColumn label="Alumno" value="alumno"/>
+                </ExcelSheet>
+            </ExcelFile>
+            <TableContainer component={Paper} style={{marginTop: '3em'}}>
               <Table aria-label="collapsible table">
                 <TableHead>
                   <TableRow>
@@ -700,6 +878,8 @@ const Backoffice = ({auth}) => {
                     <TableCell align="left">Concepto</TableCell>
                     <TableCell align="left">Propuesta de valor</TableCell>
                     <TableCell align="left">Acción</TableCell>
+                    <TableCell align="left">Eliminar</TableCell>
+                    <TableCell align="left">Deshabilitar</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -761,7 +941,7 @@ const Backoffice = ({auth}) => {
                       ))}
                     </Select>
                   </FormControl>
-                  <FormControl sx={{ mt: 5, width: '100%' }}>
+                  <FormControl sx={{ mt: 5, width: '100%' }} name="profesores">
                     <InputLabel id="demo-multiple-chip-label">Profesor / Mentor</InputLabel>
                     <Select
                       labelId="demo-profesores"
@@ -802,7 +982,57 @@ const Backoffice = ({auth}) => {
               </div>
           </TabPanel>
           <TabPanel value={valuePanel} index={3}>
-            Very soon...
+            <Typography variant="h5" color="text.secondary">Alta Novedad</Typography><br />
+            <Typography variant="body2" color="text.secondary">Complete los siguientes campos para poder dar alta una novedad.</Typography>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                width: '50%',
+                marginTop: '2em',
+                marginBottom: '2em',
+              }}>
+                <form
+                  style={{ width: '80%' }}
+                  onSubmit={submitNuevaNovedad}
+                  name="novedad"
+                >
+                  <TextField
+                    label="Descripción"
+                    required
+                    fullWidth
+                    name="descripcion"
+                  />
+                  <Button
+                    variant="raised"
+                    component="label"
+                    style={{ marginTop: '1em'}}
+                  >
+                    <input
+                      type="file"
+                      name="foto"
+                     // hidden
+                     required
+                    />
+                  </Button>
+                  <TextField
+                    style={{ marginTop: '1em'}}
+                    label="Ruta del Video"
+                    fullWidth
+                    name="rutaVideo"
+                  />
+                  <Button
+                    type="submit"
+                    fullWidth
+                    color="secondary"
+                    variant="contained"
+                    sx={{ mt: 3, mb: 2 }}
+                  >
+                    Confirmar novedad
+                  </Button>
+                </form>
+              </div>
+            <Divider /><br />
           </TabPanel>
           <TabPanel value={valuePanel} index={4}>
             Very soon...
@@ -828,10 +1058,84 @@ const Backoffice = ({auth}) => {
 function Row(props) {
   const { row } = props;
   const [open, setOpen] = React.useState(false);
-
+  const [openSnack, setOpenSnack] = React.useState(false);
+  const [messageSnackBar, setMessageSnackBar] = React.useState('');
+  const [severitySnackBar, setSeveritySnackBar] = React.useState('success');
   
-  const editarEquipo = (equipo) => {
-    console.log(equipo);
+  const confirmEditEquipo = (e) => {
+    e.preventDefault();
+    console.log(e.target.idProyecto.value);
+    const objectProyecto = {
+      nombre: e.target.nombre.value,
+      descripcion: e.target.descripcion.value,
+      propuestaValor: e.target.propuestaValor.value,
+      idTipoProyecto: e.target.tipoProyecto.value,
+      idCategoria: e.target.categoria.value,
+      rutaFoto: e.target.foto?.value.substr(12, e.target.foto?.value.length - 1),
+      cantMeGusta: 0,
+    }
+    if (e.target.type.value === 'Add') {
+      axios.post(apiURL + '/api/proyecto', objectProyecto, {headers}).then((response) => {
+        if (response) {
+          const objectEquipo = {
+            idEquipo: e.target.idEquipo.value,
+            nombre: e.target.nombreEquipo.value,
+            idProyecto: response.data.idProyecto,
+            estado: 'S',
+          };
+         axios.put(apiURL + `/api/equipo/${e.target.idEquipo.value}`, objectEquipo, {headers}).then((response) => {
+            if (response) {
+              setMessageSnackBar('Información de equipo agregado correctamente');
+              setSeveritySnackBar('success');
+              setOpenSnack(true);
+              setOpen(false);
+            }
+          });
+        }
+      });
+    } else {
+      objectProyecto.idProyecto = e.target.idProyecto.value;
+      axios.put(apiURL + `/api/proyecto/${e.target.idProyecto.value}`, objectProyecto, {headers}).then((response) => {
+        if (response) {
+          setMessageSnackBar('El equipo se ha editado correctamente');
+          setSeveritySnackBar('success');
+          setOpenSnack(true);
+          setOpen(false);
+        }
+      })
+    }
+  };
+
+  const confirmEliminarEquipo = (e) => {
+    e.preventDefault();
+
+    axios.delete(apiURL + `/api/equipo/${e.target.id.value}`, {headers}).then((response) => {
+      if (response) {
+        setMessageSnackBar('El equipo se ha eliminado correctamente');
+        setSeveritySnackBar('success');
+        setOpenSnack(true);
+        setOpen(false);
+      }
+    });
+  };
+
+  const confirmDeshabilitarEquipo = (e, estado) => {
+    e.preventDefault();
+    if (estado === 'S') {
+      axios.put(apiURL + '/api/equipopersona/deshabilitarequipo', {id: e.target.id.value}, {headers}).then((response) => {
+      });
+    } else {
+      axios.put(apiURL + '/api/equipopersona/habilitarequipo', {id: e.target.id.value}, {headers}).then((response) => {
+      });
+    }
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpenSnack(false);
   };
 
   return (
@@ -852,7 +1156,25 @@ function Row(props) {
         <TableCell align="left">{row.marca}</TableCell>
         <TableCell align="left">{row.concepto}</TableCell>
         <TableCell align="left">{row.valor}</TableCell>
-        <TableCell align="left"><ModalEquipoEdit equipo={row} disabled={row.marca ? true : false} /></TableCell>
+        <TableCell align="left">
+          <ModalEquipoEdit
+            equipo={row}
+            disabled={row.marca ? true : false}
+            handleEdicionEquipo={() => confirmEditEquipo}
+          />
+        </TableCell>
+        <TableCell align="left">
+          <ModalEquipoDelete
+            equipo={row}
+            handleEliminarEquipo={() => confirmEliminarEquipo}
+          />
+        </TableCell>
+        <TableCell align="left">
+          <ModalEquipoDisabled
+            equipo={row}
+            handleDeshabilitarEquipo={() => confirmDeshabilitarEquipo}
+          />
+        </TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
@@ -883,6 +1205,18 @@ function Row(props) {
           </Collapse>
         </TableCell>
       </TableRow>
+      <Snackbar
+        open={openSnack}
+        autoHideDuration={6000}
+        onClose={handleClose}
+        anchorOrigin={{vertical: 'top', horizontal: 'center'}}
+      >
+        <Alert
+        onClose={handleClose}
+        severity={severitySnackBar} sx={{ width: '100%' }}>
+          {messageSnackBar}
+        </Alert>
+      </Snackbar>
     </React.Fragment>
   );
 }

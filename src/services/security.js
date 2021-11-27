@@ -19,7 +19,5 @@ export const login = (email, password) => axios.post(apiURL + '/api/usuario/auth
   return Promise.reject(error.message);
 });
 
-
-//TODO logout
 export const logout = () => session.logout();
 
