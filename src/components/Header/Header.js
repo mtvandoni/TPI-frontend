@@ -12,6 +12,7 @@ import Home from '../../pages/home/Home';
 import Novedades from '../../pages/novedades/Novedades';
 import ExpoProyecto from '../../pages/expoproyecto/Expoproyecto';
 import Backoffice from '../../pages/backoffice/Backoffice';
+import MiEquipo from '../../pages/miEquipo/MiEquipo';
 import ExitToAppRoundedIcon from '@mui/icons-material/ExitToAppRounded';
 
 import './header.css';
@@ -26,20 +27,22 @@ import {
   Tooltip,
  } from '@mui/material';
 
+import session from '../../services/session';
+import {logout} from '../../services/security';
 const Header = () => {
   const [user, setUser] = React.useState(null)
-  const auth = localStorage.getItem('auth');
   React.useEffect(() => {
-    setUser(JSON.parse(auth));
+    setUser(session().data);
   }, []);
 
   const goLogin =() => {
+    logout();
     window.location.href = '/login';
   };
   return(
     <Router>
       <Box sx={{ flexGrow: 1 }}>
-        <AppBar position="static" color="default">
+        <AppBar position="fixed" color="default">
           <Toolbar>
             <IconButton
               size="large"
@@ -49,31 +52,30 @@ const Header = () => {
               sx={{ mr: 2 }}
             >
             </IconButton>
-            <img style={{marginRight: '2em'}} src={process.env.PUBLIC_URL+'logoTpi.png'} width="100"/>
-            {
-              user
-              ?
-               <><Typography variant="subtitle2" style={{ marginRight: '2em' }}>
+            <img style={{marginRight: '2em'}} src={process.env.PUBLIC_URL+'webtpi.png'} width="100"/>
+            
+              <Typography variant="subtitle2" color="white" style={{ marginLeft: '18em', marginRight: '2em' }}>
                 <Link to="/home">Home</Link>
               </Typography>
-              <Typography variant="subtitle2" style={{marginRight: '2em'}}>
+              <Typography variant="subtitle2" color="white" style={{marginRight: '2em'}}>
                 <Link to="/novedades">Novedades</Link>
               </Typography>
-              <Typography variant="subtitle2" sx={{ flexGrow: 1 }} style={{marginRight: '2em'}} >
+              <Typography variant="subtitle2" color="white" sx={{ flexGrow: 1 }} style={{marginRight: '2em'}} >
                 <Link to="/expoproyecto">ExpoProyecto</Link>
-              </Typography></>
-              : ''
-            }
+              </Typography>
+              
             {
               user 
               ?
                 <>
                 {user.idTipo === 1
                   ?
-                  <Button color="primary" variant="contained" style={{ marginRight: '2em' }}>
+                  <Button variant="outlined" style={{ marginRight: '2em', borderColor: 'white'}}>
                     <Link to="/backoffice">Backoffice</Link>
                   </Button>
-                  : ''
+                  : <Button variant="outlined" style={{ marginRight: '2em', borderColor: 'white'}}>
+                    <Link to="/miequipo">Mi Equipo</Link>
+                  </Button>
                 }<Tooltip title={user?.idTipo === 1 ? 'Administrador' : 'Alumno'} placement="bottom">
                     <Avatar sx={{ bgcolor: (user?.idTipo === 1 ? '#f4a261' : '#e9c46a') }}>{user ? user.nombre.substr(0, 1).toUpperCase() : null}</Avatar>
                   </Tooltip>
@@ -94,7 +96,7 @@ const Header = () => {
             <Login />
           </Route> */}
           <Route path="/home">
-            <Home auth={user} />
+            <Home />
           </Route>
           <Route path="/novedades">
             <Novedades />
@@ -104,6 +106,9 @@ const Header = () => {
           </Route>
           <Route path="/backoffice">
             <Backoffice auth={user?.token} />
+          </Route>
+          <Route path="/miequipo">
+            <MiEquipo auth={user?.token} />
           </Route>
         </Switch>
     </Router>

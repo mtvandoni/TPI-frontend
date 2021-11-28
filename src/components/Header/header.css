@@ -8,3 +8,7 @@ a {
   color: inherit;
 }
 .MuiButtonBase-root {}
+
+.css-ppnz4z-MuiPaper-root-MuiAppBar-root {
+  background-color: #264653!important;
+}

@@ -1,70 +1,37 @@
 /* eslint-disable no-unused-vars */
 import React from 'react';
-import axios from 'axios';
 import {
   Button,
   TextField,
-  Link,
-  Grid,
   Box,
   Typography,
   Container
 } from '@mui/material';
-import { useHistory } from 'react-router-dom';
-
-const apiURL = 'https://localhost:44311';
-const { search } = window.location;
-const params = new URLSearchParams(search);
-const redirect = params.get('callbackURL'); 
+import {login} from '../../services/security';
 
 const Login = () => {
   const [user, setUser] = React.useState(null);
-  const [email, setEmail] = React.useState('');
-  const [password, setPassword] = React.useState('');
-  const history = useHistory();
 
   React.useEffect(() => {
     setUser(null);
     localStorage.setItem('auth', JSON.stringify(null));
   }, [])
 
-  
-  const handleEmail = (event) => {
-    setEmail(event.target.value);
-  };
 
-  const handlePassword = (event) => {
-    setPassword(event.target.value);
-  };
+  function submitSession(event) {
+    event.preventDefault();
 
-  const submitSession = () => {
-    const obj = {
-      emailUnlam: email,
-      password: password,
-    }
-    console.log(obj);
-    axios.post(apiURL + '/api/usuario/authenticate', obj)
-      .then(response => {
-        console.log(response.data);
-        if (response.data) {
-          setUser(response.data.idTipo);
-          if (response.data.token) {
-            window.localStorage.setItem('auth', JSON.stringify(response.data));
-            window.location.href = redirect || '/home';
-            // history.push("/home");
-          }
-        }
-        
+    const { search } = window.location;
+    const params = new URLSearchParams(search);
+    const redirect = params.get('callbackURL');
 
-      console.log('login', localStorage.getItem('auth'));
-      })
-      .catch((error) => {
-        if (error) {
-          return null;
-        }
-  
-        throw error.response;
-      });
+    login(event.target.email.value, event.target.password.value).then(() => {
+      if (typeof window !== 'undefined') {
+        window.location.href = redirect || '/home';
+      }
+    }).catch((error) => {
+     console.log(error);
+    });
   };
 
   return(
@@ -77,7 +44,7 @@ const Login = () => {
           alignItems: 'center',
           textAlign: 'center',
         }}
-        style={{backdropFilter: 'blur(2px)', height: '100vh' }}
+        style={{backdropFilter: 'blur(2px)', height: '114vh' }}
       >
         <Typography component="h3" variant="h3" style={{ marginBottom: '1em', fontWeight: '500'}}>
           Bienvenido a WEB TPI
@@ -85,17 +52,17 @@ const Login = () => {
         <Typography component="h4" variant="h4" style={{ marginBottom: '1em', fontWeight: '300', width: '20em'}}>
         Por favor ingrese su email y contraseña para loguearse a la plataforma
         </Typography>
-        <Box component="form" sx={{ mt: 1 }}>
+        <Box sx={{ mt: 1 }}>
+          <form
+            onSubmit={submitSession}
+            name="login"
+          >
             <TextField
               margin="normal"
               required
               fullWidth
-              id="email"
-              label="Email facultativo"
+              label="Email Universitario"
               name="email"
-              autoComplete="email"
-              autoFocus
-              onChange={handleEmail}
             />
             <TextField
               margin="normal"
@@ -104,9 +71,7 @@ const Login = () => {
               name="password"
               label="Password"
               type="password"
-              id="password"
               autoComplete="current-password"
-              onChange={handlePassword}
             />
             <Button
               type="submit"
@@ -114,17 +79,18 @@ const Login = () => {
               variant="contained"
               color="error"
               sx={{ mt: 3, mb: 2 }}
-              onClick={submitSession}
             >
               Ingresar
             </Button>
-          {/*} <Grid container>
-            <Grid item xs>
-              <Link href="#" variant="body2" color="error">
-                ¿Olvidaste la contraseña?
-              </Link>
-            </Grid>
-      </Grid> */}
+            {/*} <Grid container>
+              <Grid item xs>
+                <Link href="#" variant="body2" color="error">
+                  ¿Olvidaste la contraseña?
+                </Link>
+              </Grid>
+              </Grid>
+              */}
+          </form>
         </Box>
       </Box>
     </Container>
