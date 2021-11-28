@@ -52,7 +52,7 @@ const Header = () => {
               sx={{ mr: 2 }}
             >
             </IconButton>
-            <img style={{marginRight: '2em'}} src={process.env.PUBLIC_URL+'webtpi.png'} width="100"/>
+            <img style={{marginRight: '2em', padding: '1em'}} src={process.env.PUBLIC_URL+'logoBlanco.png'} width="60"/>
             
               <Typography variant="subtitle2" color="white" style={{ marginLeft: '18em', marginRight: '2em' }}>
                 <Link to="/home">Home</Link>
