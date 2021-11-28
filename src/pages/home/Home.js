@@ -203,7 +203,6 @@ const Home = () => {
         flexWrap: 'wrap',
         marginBottom: '4em',
         marginTop: '1em',
-        height: '20vh'
       }}>
       <Box
           sx={{
@@ -213,22 +212,22 @@ const Home = () => {
             '& > :not(style)': {
               m: 1,
               width: 127,
-              height: 102,
-              borderRadius: '15px'
+              height: 28,
+              borderRadius: '6px'
             },
           }}
         >
           {
             categorias && categorias.map((cat) => (
               <Paper tabIndex="0" elevation={0} className="paperCategory" onClick={() => handleClickCategory(cat.idCategoria, cat.descripcion)}>
-                <Typography variant="subtitle2" color="inherit" style={{marginTop: '3em'}}>
+                <Typography variant="subtitle2" color="inherit" style={{marginTop: '0.2em'}}>
                   {cat.descripcion}
                 </Typography>
               </Paper>
             ))
           }
           <Paper tabIndex="0" elevation={0} className="paperCategory" onClick={() => handleClickCategory()}>
-            <Typography variant="subtitle2" color="inherit" style={{marginTop: '3em'}}>
+            <Typography variant="subtitle2" color="inherit" style={{marginTop: '0.2em'}}>
               Todos
             </Typography>
           </Paper>
