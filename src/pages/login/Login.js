@@ -35,44 +35,40 @@ const Login = () => {
   };
 
   return(
-    <Container component="main" maxWidth="xl"  style={{ background: `url('${process.env.PUBLIC_URL}/backImage2.png') no-repeat center`}}>
-      <Box
-        sx={{
-          marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          textAlign: 'center',
-        }}
-        style={{backdropFilter: 'blur(2px)', height: '114vh' }}
-      >
-        <Typography component="h3" variant="h3" style={{ marginBottom: '1em', fontWeight: '500'}}>
-          Bienvenido a WEB TPI
-        </Typography>
-        <Typography component="h4" variant="h4" style={{ marginBottom: '1em', fontWeight: '300', width: '20em'}}>
-        Por favor ingrese su email y contraseña para loguearse a la plataforma
-        </Typography>
-        <Box sx={{ mt: 1 }}>
-          <form
-            onSubmit={submitSession}
-            name="login"
-          >
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              label="Email Universitario"
-              name="email"
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              autoComplete="current-password"
-            />
+    <Box
+      component="main"
+      sx={{
+        alignItems: 'center',
+        display: 'flex',
+        flexGrow: '1',
+        minHeight: '100%',
+        background: `url('${process.env.PUBLIC_URL}/backImage2.png') no-repeat center`,
+        height: '80vh'
+       }}
+    >
+      <Container maxWidth="sm"
+        sx={{ backdropFilter: 'blur(2px)' }}>
+        <form
+          onSubmit={submitSession}
+          name="login"
+        >
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            label="Email Universitario"
+            name="email"
+          />
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            name="password"
+            label="Password"
+            type="password"
+            autoComplete="current-password"
+          />
+          <Box sx={{ py: 2}}>
             <Button
               type="submit"
               fullWidth
@@ -82,18 +78,10 @@ const Login = () => {
             >
               Ingresar
             </Button>
-            {/*} <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2" color="error">
-                  ¿Olvidaste la contraseña?
-                </Link>
-              </Grid>
-              </Grid>
-              */}
-          </form>
-        </Box>
-      </Box>
-    </Container>
+          </Box>
+        </form>
+      </Container>
+    </Box>
   )
 }
 

@@ -9,6 +9,7 @@ a {
 }
 .MuiButtonBase-root {}
 
-.css-ppnz4z-MuiPaper-root-MuiAppBar-root {
+
+.MuiContainer-root .MuiContainer-maxWidthXl .css-19r6kue-MuiContainer-root{
   background-color: #264653!important;
 }
