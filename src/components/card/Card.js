@@ -194,9 +194,12 @@ const CardCustom = ({type, data, participantes, descripcion, nombre, img, video,
         anchor="right"
         open={openDrawer}
         onClose={toggleDrawer(false)}
+        sx={{
+          '& .MuiDrawer-paper':{ width: {xs: 315, sm: 650, md:853, lg: 853}}
+        }}
       >
         <Box
-          sx={{width: 800 }}
+          sx={{width: { xs: 243, md: 560, lg: 800 }}}
           role="presentation"
           style={{ padding: '2em'}}
         >
@@ -212,12 +215,12 @@ const CardCustom = ({type, data, participantes, descripcion, nombre, img, video,
               indicatorColor="secondary"
             >
               <Tab label="Información"{...a11yProps(0)} style={{marginRight: '1em'}} />
-              <Tab label="Equipo" style={{display: type !== 'proyecto' ? 'none': 'block' }}  {...a11yProps(1)} />
+              <Tab label="Equipo" style={{display: type !== 'proyecto' ? 'none': '' }}  {...a11yProps(1)} />
             </Tabs>
           </Box>
           <TabPanel value={valuePanel} index={0}>
               <div>
-                <img height="400" src={img} style={{borderRadius: 15, marginLeft: 'auto', marginRight: 'auto', display: 'block'}} alt={img}/>
+                <img className="img-drawer" height="400" src={img} style={{borderRadius: 15, marginLeft: 'auto', marginRight: 'auto', display: 'block'}} alt={img}/>
               </div>
               {type === 'proyecto' ?
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -248,7 +251,7 @@ const CardCustom = ({type, data, participantes, descripcion, nombre, img, video,
             display: 'flex',
             flexDirection: 'row',
             flexWrap: 'wrap',
-            marginBottom: '4em',
+            // marginBottom: '4em',
             justifyContent: 'center'
           }}>
           {
@@ -283,17 +286,15 @@ const CardCustom = ({type, data, participantes, descripcion, nombre, img, video,
           </TabPanel>
         </Box>
        <div
+        className="comment-padre"
           style={{
-            marginRight: 'auto',
-            marginLeft: 'auto',
-            width: '60%',
-            marginBottom: '4em',
             display: enabledComment === 'no' ? 'none' : 'display'
           }}>
             {comentarios ?
-            <div style={{ height: '20em', overflowY: 'scroll', width: '41em', marginBottom: '2em'}} >
+            <div className="comment-container" style={{ }} >
             {comentarios && comentarios.map((comentario) => (
               <div
+                className="comment"
                 style={{
                   borderBottom: '1px solid #80808052',
                   marginBottom: '2em',
@@ -324,7 +325,8 @@ const CardCustom = ({type, data, participantes, descripcion, nombre, img, video,
           </div> : null}
             
           <form
-           onSubmit={nuevoComentario}
+            className="form-comment"
+            onSubmit={nuevoComentario}
             name="comentario"
           >
             <TextField

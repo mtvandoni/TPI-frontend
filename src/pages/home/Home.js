@@ -12,15 +12,12 @@ import { Typography,
   Paper,
   Box,
   Grid,
+  Button,
+  Divider,
 } from '@mui/material';
-import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined';
-import LocalFireDepartmentOutlinedIcon from '@mui/icons-material/LocalFireDepartmentOutlined';
-import AttachMoneyRoundedIcon from '@mui/icons-material/AttachMoneyRounded';
-import LocalHospitalRoundedIcon from '@mui/icons-material/LocalHospitalRounded';
-import SchoolRoundedIcon from '@mui/icons-material/SchoolRounded';
-import FoodBankRoundedIcon from '@mui/icons-material/FoodBankRounded';
-import StoreRoundedIcon from '@mui/icons-material/StoreRounded';
-import RepeatRoundedIcon from '@mui/icons-material/RepeatRounded';
+
+import AdjustRoundedIcon from '@mui/icons-material/AdjustRounded';
+import Carousel from 'react-material-ui-carousel'
 
 import session from '../../services/session';
 
@@ -170,98 +167,205 @@ const Home = () => {
   };
 
   return(
-    <Container container maxWidth="xl"
-      style={{
-        padding: '4em',
-      }}
+    <>
+    <Box
+      sx={{ height: '50vh'}}
     >
-      <Typography variant="h5" color="text.primary">
-        <LocalFireDepartmentOutlinedIcon style={{marginRight: '0.5em'}} />
-        Los mas votados
-      </Typography>
-      <div style={{
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        flexWrap: 'wrap',
-        marginBottom: '4em',
-        height: '20vh'
-      }}>
-         Coming Soon...
-        {/*<CardCustom title='EducApp' body='La app EducApp loremp impsum' category='Educacion' img="https://thumbs.dreamstime.com/b/aprendizaje-electr%C3%B3nico-app-del-vector-49960281.jpg" />
-        <CardCustom title='MercadoPago' body='La app MercadoPago lorem impsum' category='Fintech' img="https://future.inese.es/wp-content/uploads/2020/02/fintechfuture.jpg" />
-        <CardCustom title='OsdeApp' body='La app OsdeApp lorem impsmum' category='Salud' img="https://www.nalgeneiberia.com/wp-content/uploads/2016/02/1602_Nalgene_blog_5appssalud_01-770x452.jpg" /> */}
-      </div>
-      <Typography variant="h5" color="text.primary">
-        <CategoryOutlinedIcon style={{marginRight: '0.5em'}} />
-        Categorías
-      </Typography>
-      <div style={{
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        flexWrap: 'wrap',
-        marginBottom: '4em',
-        marginTop: '1em',
-      }}>
-      <Box
+      <Carousel autoPlay={false}>
+        <Box
           sx={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            justifyContent: 'center',
-            '& > :not(style)': {
-              m: 1,
-              width: 127,
-              height: 28,
-              borderRadius: '6px'
-            },
+            height: '78vh',
+            background: `url('http://periodicosic.com.ar/wp-content/uploads/2014/06/BIBLIOTECA-UNLAM.jpg') no-repeat center`, 
+            backgroundSize: 'cover'
           }}
         >
-          {
-            categorias && categorias.map((cat) => (
-              <Paper tabIndex="0" elevation={0} className="paperCategory" onClick={() => handleClickCategory(cat.idCategoria, cat.descripcion)}>
-                <Typography variant="subtitle2" color="inherit" style={{marginTop: '0.2em'}}>
-                  {cat.descripcion}
-                </Typography>
-              </Paper>
-            ))
-          }
-          <Paper tabIndex="0" elevation={0} className="paperCategory" onClick={() => handleClickCategory()}>
-            <Typography variant="subtitle2" color="inherit" style={{marginTop: '0.2em'}}>
-              Todos
-            </Typography>
-          </Paper>
+          <Container sx={{ paddingTop: {xs: '24em', sm: '23em', md: '23em', lg: '20em'}}}>
+            <Paper
+              sx={{ padding: '1em 1.5em 1.5em 1em', width: {xs: '18em', md: '20em', lg:'20em'}}}
+              elevation={3}
+            >
+              <Typography
+                sx={{
+                  fontSize: {xs: '14px', lg:'20px'},
+                  fontWeight: '500',
+                }}
+              >Web TPI
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: {xs: '10px', lg:'16px'},
+                }}
+              >Una herramienta para alumnos y profesores de la materia 'Taller Practico Integrador'
+              </Typography>
+            </Paper>
+          </Container>
         </Box>
-      </div>
-      <div
-        style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}
-      >
-        <Typography variant="h5" color="text.primary">
-          {filterCategory ? filterCategory : 'Todos'}
-        </Typography>
-      </div>
-      <div style={{
+        <Box
+          sx={{
+            height: '78vh',
+            background: `url('https://lh3.googleusercontent.com/proxy/GdrafxmHml21UXlZ7-cVjJ_9PYGO44VHc8sVnhc4FDNac1k6QMnu7_sSkLQ5VoNwVt2iLmWe182JqILXNgYrzLF6XmuO2L6j57PluUxmcRqL') no-repeat center`, 
+            backgroundSize: 'cover'
+          }}
+        >
+          <Container sx={{ paddingTop: {xs: '24em', sm: '23em', md: '23em', lg: '20em'}}}>
+            <Paper
+              sx={{ padding: '1em 1.5em 1.5em 1em', width: {xs: '18em', md: '20em', lg:'20em'}}}
+              elevation={3}
+            >
+              <Typography
+                sx={{
+                  fontSize: {xs: '14px', lg:'20px'},
+                  fontWeight: '500',
+                }}
+              >Los proyectos en un solo lugar
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: {xs: '10px', lg:'16px'},
+                }}
+              >Herramienta para administrar los proyectos de la materia
+              </Typography>
+            </Paper>
+          </Container>
+        </Box>
+      </Carousel>
+    </Box>
+    <Box
+      component="main"
+      sx={{
         display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        flexWrap: 'wrap',
-        marginBottom: '4em',
-      }}>
-        {
-          proyecto.length > 0 ? proyecto.map((proy) => (
-            <CardCustom
-              key={proy?.data?.idProyecto}
-              type="proyecto"
-              data={proy?.data}
-              participantes={proy?.participantes}
-              img={process.env.PUBLIC_URL+proy?.data?.rutaFoto ? proy?.data?.rutaFoto : 'noImage.png'}
-            />
-          )) : <Typography variant="subtitle2" color="inherit" style={{marginTop: '4em'}}>
-            Por el momento no hay proyectos con esta categoría
+        flexGrow: '1',
+        minHeight: '100%',
+      }}
+    >
+      <Container maxWidth="xl"
+        sx={{
+          paddingTop: {xs: '15em', md: '24em', xl: '24em'}
+        }}
+      >
+        <Box>
+          <Typography
+            color="text.primary"
+            sx={{ fontSize: { xs: 14, md: 14, lg: 24}}}
+          >
+            <AdjustRoundedIcon style={{marginRight: '0.5em', color: '#c03618'}} />
+            Los mas votados
           </Typography>
-          }
-      </div>
-    </Container>
+        </Box>
+        <div style={{
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-around',
+          flexWrap: 'wrap',
+          marginBottom: '4em',
+          height: '20vh'
+        }}>
+          Coming Soon...
+          {/*<CardCustom title='EducApp' body='La app EducApp loremp impsum' category='Educacion' img="https://thumbs.dreamstime.com/b/aprendizaje-electr%C3%B3nico-app-del-vector-49960281.jpg" />
+          <CardCustom title='MercadoPago' body='La app MercadoPago lorem impsum' category='Fintech' img="https://future.inese.es/wp-content/uploads/2020/02/fintechfuture.jpg" />
+          <CardCustom title='OsdeApp' body='La app OsdeApp lorem impsmum' category='Salud' img="https://www.nalgeneiberia.com/wp-content/uploads/2016/02/1602_Nalgene_blog_5appssalud_01-770x452.jpg" /> */}
+        </div>
+        <br />
+        <Divider />
+        <br />
+        <Typography 
+          sx={{ fontSize: { xs: 14, md: 14, lg: 24}}}
+          color="text.primary"
+        >
+          <AdjustRoundedIcon style={{marginRight: '0.5em', color: '#f2aa1e'}} />
+          Categorías
+        </Typography>
+        <div style={{
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-around',
+          flexWrap: 'wrap',
+          marginBottom: '4em',
+          marginTop: '1em',
+        }}>
+          <Box
+            component="main"
+            sx={{
+              flexGrow: 1,
+              py: 8,
+            }}
+          >
+            <Container maxWidth={false}>
+              <Box sx={{ pt: 3}}>
+                <Grid
+                  container
+                  spacing={3}
+                >
+                  {
+                    categorias && categorias.map((cat) => (
+                      <Grid
+                        item
+                        key={cat.id}
+                        lg={4}
+                        md={6}
+                        xs={12}
+                      >
+                        <Paper tabIndex="0" elevation={0} className="paperCategory" onClick={() => handleClickCategory(cat.idCategoria, cat.descripcion)}>
+                          <Typography variant="subtitle2" color="inherit" style={{marginTop: '0.2em'}}>
+                            {cat.descripcion}
+                          </Typography>
+                        </Paper>
+                      </Grid>
+                    ))
+                  }
+                  <Grid
+                        item
+                        lg={4}
+                        md={6}
+                        xs={12}
+                      >
+                    <Paper tabIndex="0" elevation={0} className="paperCategory" onClick={() => handleClickCategory()}>
+                      <Typography
+                        variant="subtitle2"
+                        color="inherit"
+                        style={{marginTop: '0.2em'}}>
+                        Todos
+                      </Typography>
+                    </Paper>
+                  </Grid>
+                </Grid>
+              </Box>
+            </Container>
+          </Box>
+        </div>
+        <div
+          style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}
+        >
+          <Typography
+            sx={{ fontSize: { xs: 12, md: 12, lg: 20}}}
+            color="text.primary"
+          >
+            {filterCategory ? filterCategory : 'Todos'}
+          </Typography>
+        </div>
+        <div style={{
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-around',
+          flexWrap: 'wrap',
+          marginBottom: '4em',
+        }}>
+          {
+            proyecto.length > 0 ? proyecto.map((proy) => (
+              <CardCustom
+                key={proy?.data?.idProyecto}
+                type="proyecto"
+                data={proy?.data}
+                participantes={proy?.participantes}
+                img={process.env.PUBLIC_URL+proy?.data?.rutaFoto ? proy?.data?.rutaFoto : 'noImage.png'}
+              />
+            )) : <Typography variant="subtitle2" color="inherit" style={{marginTop: '4em'}}>
+              Por el momento no hay proyectos con esta categoría
+            </Typography>
+            }
+        </div>
+      </Container>
+    </Box></>
   )
 };
 

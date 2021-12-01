@@ -480,16 +480,16 @@ const Backoffice = ({auth}) => {
 
   return(
     <Container maxWidth="xl"
-      style={{
-        padding: '4em',
-      }}
+      sx={{ padding: {xs: '0.5em', md: '0.5em', lg: '4em'} }}
     >
       <Tabs
         value={valuePanel}
         onChange={handleChangePanel}
-        aria-label="basic tabs example"
         textColor="secondary"
         indicatorColor="secondary"
+        variant="scrollable"
+        scrollButtons="auto"
+        aria-label="scrollable auto tabs example"
       >
         <Tab label="General" {...a11yProps(0)} />
         <Tab label="Usuarios" {...a11yProps(1)} />
@@ -524,12 +524,11 @@ const Backoffice = ({auth}) => {
               style={{
                 display: 'flex',
                 justifyContent: 'space-between',
-                width: '50%',
                 marginTop: '2em',
                 marginBottom: '2em',
               }}>
                 <form
-                  style={{ width: '50%' }}
+                  className="forms"
                   onSubmit={submitNuevaCursada}
                   name="cursada"
                 >
@@ -567,12 +566,12 @@ const Backoffice = ({auth}) => {
               style={{
                 display: 'flex',
                 justifyContent: 'space-between',
-                width: '50%',
+               // width: '50%',
                 marginTop: '2em',
                 marginBottom: '2em',
               }}>
                 <form
-                  style={{ width: '50%' }}
+                  className="forms"
                  onSubmit={submitNuevaCategoria}
                   name="categoria"
                 >
@@ -599,12 +598,11 @@ const Backoffice = ({auth}) => {
               style={{
                 display: 'flex',
                 justifyContent: 'space-between',
-                width: '50%',
                 marginTop: '2em',
                 marginBottom: '2em',
               }}>
                 <form
-                  style={{ width: '50%' }}
+                  className="forms"
                  onSubmit={submitNuevoTipoProyecto}
                   name="categoria"
                 >
@@ -681,16 +679,16 @@ const Backoffice = ({auth}) => {
           <Typography variant="h5" color="text.secondary">Alta de profesor</Typography><br />
             <Typography variant="body2" color="text.secondary">Complete los campos para poder dar de alta a un profesor</Typography>
             <form
-                style={{}}
-                onSubmit={altaProfesor}
-                name="altaProfesor"
-              >
+              className="forms form-profesor"
+              onSubmit={altaProfesor}
+              name="altaProfesor"
+            >
                 <div
+                  className="container-form"
                 style={{
                   display: 'flex',
                   justifyContent: 'space-between',
                   flexWrap: 'wrap',
-                  width: '50%',
                   marginTop: '2em',
                   marginBottom: '2em',
                 }}>
@@ -731,7 +729,7 @@ const Backoffice = ({auth}) => {
                     label="Descripción"
                   />
               </div>
-              <div style={{ display: 'flex', justifyContent: 'center', width: '50%' }}>
+              <div style={{ display: 'flex', widht: '50%' }}>
                 <Button
                   style={{ alignItems: 'center' }}
                   variant="contained"
@@ -747,14 +745,16 @@ const Backoffice = ({auth}) => {
               style={{ marginTop: '1em' }}>Alta masiva de alumnos</Typography><br />
             <Typography variant="body2" color="text.secondary">Seleccione el excel de alumnos para el alta masiva</Typography>
             <div
+              
+              className="container-form"
               style={{
                 display: 'flex',
                 justifyContent: 'space-between',
-                width: '50%',
                 marginTop: '2em',
                 marginBottom: '2em',
               }}>
               <form
+                className="forms"
               >
                 <TextField
                   key="cursada"
@@ -787,20 +787,19 @@ const Backoffice = ({auth}) => {
               style={{ marginTop: '1em' }}
             >Alta manual de alumnos</Typography><br />
             <Typography variant="body2" color="text.secondary">Si necesita o prefiere puede dar de alta por cada alumno</Typography>
-            
             <form
-              style={{}}
+              className="forms form-profesor"
               onSubmit={altaAlumnoIndividual}
               name="altaManualAlumnos"
             >
               <div
+                className="container-form"
                 style={{
                   display: 'flex',
                   justifyContent: 'space-between',
                   flexWrap: 'wrap',
                   marginTop: '2em',
                   marginBottom: '2em',
-                  width: '50%'
                 }}>
                   <TextField
                     key="cursada"
@@ -841,7 +840,7 @@ const Backoffice = ({auth}) => {
                     label="Email Unlam"
                   />
               </div>
-              <div style={{ display: 'flex', justifyContent: 'center', width: '50%' }}>
+              <div style={{ display: 'flex',  widht: '50%' }}>
                 <Button
                   style={{ alignItems: 'center' }}
                   variant="contained"
@@ -897,12 +896,11 @@ const Backoffice = ({auth}) => {
                 display: 'flex',
                 justifyContent: 'space-between',
                 flexDirection: 'row',
-                width: '50%',
                 marginTop: '2em',
                 marginBottom: '2em',
               }}>
                 <form
-                  style={{ width: '50%' }}
+                  className="forms"
                   onSubmit={submitNuevoEquipo}
                   name="equipo"
                 >
@@ -988,12 +986,11 @@ const Backoffice = ({auth}) => {
               style={{
                 display: 'flex',
                 justifyContent: 'space-between',
-                width: '50%',
                 marginTop: '2em',
                 marginBottom: '2em',
               }}>
                 <form
-                  style={{ width: '80%' }}
+                  className="forms"
                   onSubmit={submitNuevaNovedad}
                   name="novedad"
                 >
