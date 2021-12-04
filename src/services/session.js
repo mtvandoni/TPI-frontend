@@ -1,4 +1,43 @@
-import axios from 'axios';
+import Cookies from 'universal-cookie';
+
+// const Cookies = require('universal-cookie').default;
+
+
+const session = () => {
+  const cookies = new Cookies();
+  
+  const sess = cookies.get('X-Token');
+
+  return sess || {};
+}
+
+session.login = (user, data) => {
+ // console.log('session login', user, data)
+  const cookies = new Cookies ();
+  cookies.set('X-Token', {
+    token: data.token,
+    data: data,                                  
+    user,
+    usuario: data
+  });
+};
+
+session.data = () => {
+  const cookies = new Cookies();
+  return cookies.get('X-Token');
+};
+
+session.logout = () => {
+  const cookies = new Cookies();
+  cookies.set('X-Token', {token: null, data: null, user: null});
+}
+
+export default session;
+
+
+
+
+/* import axios from 'axios';
 
 const Session = () => {}
 
@@ -19,4 +58,4 @@ const login = (mail, pass) => {
     //  throw error.response;
     // });
 }
-export default login;
+export default login; */

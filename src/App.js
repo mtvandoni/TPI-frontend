@@ -4,36 +4,14 @@ import './App.css';
 
 import Header from './components/header/Header';
 import Login from './pages/login/Login';
+import session from './services/session';
 
 const App = () => {
-  const auth = localStorage.getItem('auth');
   const [user, setUser] = React.useState(null);
 
   React.useEffect(() => {
-    setUser(JSON.parse(auth));
+    setUser(session().data);
   },[]);
-  
- /* React.useEffect(() => {
-    fetch("https://localhost:44311/api/persona", {
-      method: "GET",
-      headers: {
-          "Content-Type": "text/plain",
-
-      },
-    })
-      .then(res => res.json())
-      .then(
-        (result) => {
-          console.log(result);
-        },
-        // Nota: es importante manejar errores aquí y no en 
-        // un bloque catch() para que no interceptemos errores
-        // de errores reales en los componentes.
-        (error) => {
-          console.log(error);
-        }
-    )
-  }, []); */
 
   return (
     <div>

@@ -1,8 +1,47 @@
 .input-file{
-    color: transparent;
-    width: 16em;
+  color: transparent;
+  width: 16em;
 }
 
-.textField {
-    margin-top: 1em!important;
+.css-1m72p6i-MuiPaper-root-MuiDialog-paper {
+  width: 80em!important;
+  max-width: 80em!important;
+}
+
+input[type="date"] {
+  width: 23.8em;
+  height: 4em;
+  border: 1px solid rgb(0 0 0 / 54%);
+  border-radius: 4px;
+}
+
+.forms{
+  width: 20em;
+}
+
+
+.form-profesor {
+  width: 93em;
+}
+
+.container-form {
+  width: 50%;
+}
+
+@media (max-width: 600px) {
+  input[type="date"] {
+    width: 19em;
+  }
+
+  .forms {
+    width: 16em;
+  }
+
+  .css-1s7lm89>:not(style) {
+    width: 20.5em!important;
+  }
+
+  .container-form {
+    width: auto;
+  }
 }

@@ -19,17 +19,102 @@ div .cardPerson {
   margin-bottom: 8em!important;
 }
 
-.cardPerson:last-child {
-  background-color: #2A9D8F!important;
-}
 
 .typoCardPerson {
   position: absolute!important;
   top: 1.6em!important;
-  left: 1.4em!important;
+  left: 1.7em!important;
 }
 
 .cardPerson .description{
   margin-top: 11em!important;
   text-align: center!important;
 }
+
+
+.video-responsive {
+  overflow: hidden;
+  padding-bottom: 56.25%;
+  position: relative;
+  height: 0;
+}
+
+.video-responsive iframe {
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+}
+
+.img-drawer {
+
+}
+
+.comment-padre {
+  margin-right: auto;
+  margin-left: auto;
+  width: 60%;
+  margin-bottom: 4em;
+}
+
+.comment-container {
+  height: 20em;
+  overflow-y: scroll;
+  width: 41em;
+  margin-bottom: 2em;
+}
+
+.comment {
+  border-bottom: 1px solid #80808052;
+  margin-bottom: 2em;
+  padding-bottom: 1em;
+  margin-right: 10em;
+}
+
+@media (max-width: 600px) {
+  .img-drawer {
+    height: 154px;
+    margin-left: 0;
+    margin-right: 0; 
+  }
+  .comment-container {
+    width: 15em;
+    padding-right: 1em;
+  }
+  .comment {
+    border-bottom: 1px solid #80808052;
+    margin-bottom: 2em;
+    padding-bottom: 1em;
+    margin-right: 0!important;
+  }
+  .comment-padre {
+    margin-left: 2.5em;
+  }
+  .form-comment {
+    width: 15em
+  }
+
+  .css-14ab3qb>:not(style) {
+    width: 80px!important;
+    height: 80px!important;
+  }
+
+  div .cardPerson {
+    border-radius: 50%!important;
+    margin-right: 3em!important;
+    position: relative!important;
+    background-color: #E9C46A!important;
+    margin-bottom: 6em!important;
+  }
+
+  .typoCardPerson {
+    top: 0.6em!important;
+    left: 0.79em!important;
+  }
+
+  .cardPerson .description{
+    margin-top: 5em!important;
+  }
+}
+
