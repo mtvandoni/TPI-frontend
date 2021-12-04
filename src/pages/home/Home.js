@@ -179,9 +179,9 @@ const Home = () => {
             backgroundSize: 'cover'
           }}
         >
-          <Container sx={{ paddingTop: {xs: '24em', sm: '23em', md: '23em', lg: '20em'}}}>
+          <Container sx={{ paddingTop: {xs: '24em', sm: '23em', md: '23em', lg: '37em'}}}>
             <Paper
-              sx={{ padding: '1em 1.5em 1.5em 1em', width: {xs: '18em', md: '20em', lg:'20em'}}}
+              sx={{ padding: '1em 1.5em 1.5em 1em', width: {xs: '18em', md: '20em', lg:'40em'}}}
               elevation={3}
             >
               <Typography
@@ -203,13 +203,13 @@ const Home = () => {
         <Box
           sx={{
             height: '78vh',
-            background: `url('https://lh3.googleusercontent.com/proxy/GdrafxmHml21UXlZ7-cVjJ_9PYGO44VHc8sVnhc4FDNac1k6QMnu7_sSkLQ5VoNwVt2iLmWe182JqILXNgYrzLF6XmuO2L6j57PluUxmcRqL') no-repeat center`, 
+            background: `url('https://www.eafit.edu.co/escuelas/ciencias/noticias/PublishingImages/mediacion.jpg') no-repeat center`, 
             backgroundSize: 'cover'
           }}
         >
-          <Container sx={{ paddingTop: {xs: '24em', sm: '23em', md: '23em', lg: '20em'}}}>
+          <Container sx={{ paddingTop: {xs: '24em', sm: '23em', md: '23em', lg: '37em'}}}>
             <Paper
-              sx={{ padding: '1em 1.5em 1.5em 1em', width: {xs: '18em', md: '20em', lg:'20em'}}}
+              sx={{ padding: '1em 1.5em 1.5em 1em', width: {xs: '18em', md: '20em', lg:'40em'}}}
               elevation={3}
             >
               <Typography

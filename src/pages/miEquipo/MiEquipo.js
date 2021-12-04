@@ -29,6 +29,7 @@ import {
   Chip,
   MenuItem,
  } from '@mui/material';
+ import './miequipo.css';
 
  const apiURL = 'https://localhost:44311';
  const headers = { 
@@ -120,9 +121,7 @@ const MiEquipo = () => {
 
   return (
     <Container maxWidth="xl"
-      style={{
-        padding: '4em',
-      }}
+      sx={{ padding: {xs: '0.5em', md: '0.5em', lg: '4em'} }}
     >
       <Box
         sx={{
@@ -155,7 +154,7 @@ const MiEquipo = () => {
                 marginBottom: '2em',
               }}>
                 <form
-                  style={{ width: '100%' }}
+                  className="forms"
                   onSubmit={submitEditProyecto}
                   name="cursada"
                 >
@@ -168,7 +167,8 @@ const MiEquipo = () => {
                     // label="Descripción"
                     name="descripcion"
                     value={miInfo?.descripcion}
-                    style={{marginRight: '2em', width: '50em',marginBottom: '2em'}}
+                    fullWidth
+                    style={{marginRight: '2em', marginBottom: '2em'}}
                   />
                   <Typography
                     variant="body2"
@@ -179,7 +179,8 @@ const MiEquipo = () => {
                     // label="Propuesta de Valor"
                     name="descripcion"
                     value={miInfo?.propuestaValor}
-                    style={{marginRight: '2em', width: '50em', marginBottom: '2em'}}
+                    fullWidth
+                    style={{marginRight: '2em', marginBottom: '2em'}}
                   />
                   <Typography
                     variant="body2"
@@ -189,8 +190,9 @@ const MiEquipo = () => {
                   <TextField
                     // label="Repositorio"
                     name="descripcion"
+                    fullWidth
                     value={miInfo?.repositorio ? miInfo.repositorio : null}
-                    style={{marginRight: '2em', width: '50em', marginBottom: '2em'}}
+                    style={{marginRight: '2em', marginBottom: '2em'}}
                   />
                   <Typography
                     variant="body2"
@@ -200,8 +202,9 @@ const MiEquipo = () => {
                   <TextField
                     // label="Ruta video"
                     name="rutaVideo"
+                    fullWidth
                     value={miInfo?.rutaVideo ? miInfo.rutaVideo : null}
-                    style={{marginRight: '2em', width: '50em', marginBottom: '2em'}}
+                    style={{marginRight: '2em', marginBottom: '2em'}}
                   />
                   <br />
                   <Typography
@@ -212,6 +215,7 @@ const MiEquipo = () => {
                   <Button
                     variant="raised"
                     component="label"
+                    classNamE="buttonLabel"
                   >
                     <input
                       type="file"
