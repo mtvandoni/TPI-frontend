@@ -3,6 +3,7 @@ import {Container} from '@mui/material';
 import axios from 'axios';
 
 import CardCustom from '../../components/card/Card';
+import Footer from '../../components/footer/Footer';
 
 import session from '../../services/session';
 const apiURL = 'https://localhost:44311';
@@ -22,7 +23,7 @@ const Novedades = () => {
   }, []);
 
   return(
-    <Container maxWidth="xl"
+    <><Container maxWidth="xl"
       style={{
         padding: '4em',
         height: '100vh'
@@ -35,11 +36,11 @@ const Novedades = () => {
         flexWrap: 'wrap',
         marginBottom: '4em',
       }}>
-        { novedades && novedades.map((novedad) => (
-          <CardCustom type="novedad" descripcion={novedad.descripcion} img={novedad.rutaFoto} enabledComment="no" video={novedad.rutaVideo}/>
-        ))} 
+        {novedades && novedades.map((novedad) => (
+          <CardCustom type="novedad" descripcion={novedad.descripcion} img={novedad.rutaFoto} enabledComment="no" video={novedad.rutaVideo} />
+        ))}
       </div>
-    </Container>
+    </Container><Footer /></>
   )
 }
 

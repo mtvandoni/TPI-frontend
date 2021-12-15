@@ -44,15 +44,17 @@ import {
  import DoNotDisturbAltIcon from '@mui/icons-material/DoNotDisturbAlt';
  import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlineRounded';
  import ReactExport from "react-export-excel";
+ import Footer from '../../components/footer/Footer';
 
   const ExcelFile = ReactExport.ExcelFile;
   const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
   const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
  
- const apiURL = 'https://localhost:44311';
+ const apiURL = 'https://localhost:44311'; // "http://webtpi-001-site1.dtempurl.com"; // 'https://localhost:44311';
  const headers = { 
   'Authorization': session().token,
   'Content-type': 'application/json; charset=iso-8859-1',
+  'Access-Control-Allow-Origin': '*',
 };
  
 const Backoffice = ({auth}) => {
@@ -63,7 +65,7 @@ const Backoffice = ({auth}) => {
   const [messageSnackBar, setMessageSnackBar] = React.useState('');
   const [severitySnackBar, setSeveritySnackBar] = React.useState('success');
   const [cursada, setCursada] = React.useState('');
-  const [upload, setUpload] = React.useState(true);
+  const [update, setUpdate] = React.useState(true);
   const [alumnos, setAlumnos] = React.useState([]);
   const [profesores, setProfesores] = React.useState([]);
   const [alumnoName, setAlumnoName] = React.useState([]);
@@ -92,6 +94,11 @@ const Backoffice = ({auth}) => {
           setCursada(response.data);
         }
     });
+
+    axios.get(apiURL + '/api/equipo/getequiposfull', {headers}).then((response) => {
+      console.log(response.data);
+      normalizeTeams2(response.data);
+    })
 
     axios.get(apiURL + '/api/usuario', {headers})
       .then((response) => {
@@ -124,7 +131,7 @@ const Backoffice = ({auth}) => {
           });
         });
     });
-  }, [upload]);
+  }, [update]);
 
   const normalizeUsuarios = (data) => {
     const object = [];
@@ -144,6 +151,27 @@ const Backoffice = ({auth}) => {
     object.push(profesor, alumnos);
     return object;
   }
+
+  const normalizeTeams2 = (data) => {
+    const alumnos = [];
+    const team = [];
+    const equipo = [];
+    
+    data.forEach((item) => {
+      alumnos.push({ nombrePersona: item.nombrePersona, dniPersona: item.dniPersona, edad: item.edad, email: item.email, emailUnlam: item.emailUnlam,
+      idEquipo: item.idEquipo, idPersona: item.idPersona});
+
+    });
+    console.log(alumnos);
+    
+    data.forEach((item) => {
+      let asd = alumnos.filter(e => e.idEquipo === item.idEquipo);
+      if (asd) {
+        team.push(asd);
+      }
+    });
+    console.log(team);
+  };
 
   const normalizeTeams = (data) => {
     const alumnos = data[0];
@@ -179,6 +207,7 @@ const Backoffice = ({auth}) => {
         idProyecto: proAux ? proAux.idProyecto : '',
         idTipoProyecto: proAux ? proAux.idTipoProyecto : '',
         idCategoria: proAux ? proAux.idCategoria : '',
+        estado: equipo ? equipo.estado : ''
       };
       teams.push(team);
     });
@@ -201,6 +230,7 @@ const Backoffice = ({auth}) => {
   };
 
   const handleChangePanel = (event, newValue) => {
+    event.preventDefault();
     setValuePanel(newValue);
   }
 
@@ -273,8 +303,8 @@ const Backoffice = ({auth}) => {
           setMessageSnackBar('Usuario creado correctamente');
           setSeveritySnackBar('success');
           setOpen(true);
-          setUpload(!upload);
-          setUpload(!upload);
+          setUpdate(!update);
+          setUpdate(!update);
         }
       })
       .catch(err => {
@@ -367,7 +397,8 @@ const Backoffice = ({auth}) => {
           setMessageSnackBar('Alta de cursada generada correctamente');
           setSeveritySnackBar('success');
           setOpen(true);
-          setUpload(!upload);
+          setUpdate(!update);
+          setUpdate(!update);
         }
       });
   };
@@ -388,12 +419,14 @@ const Backoffice = ({auth}) => {
         setMessageSnackBar('Alta de equipo generado correctamente');
         setSeveritySnackBar('success');
         setOpen(true);
-        setUpload(!upload);
+        setUpdate(!update);
+        setUpdate(!update);
       if (response) {
         setMessageSnackBar('Alta de equipo generado correctamente');
           setSeveritySnackBar('success');
           setOpen(true);
-          setUpload(!upload);
+          setUpdate(!update);
+          setUpdate(!update);
       }
     })
   };
@@ -405,7 +438,8 @@ const Backoffice = ({auth}) => {
         setMessageSnackBar('Nueva categoría generada correctamente');
         setSeveritySnackBar('success');
         setOpen(true);
-        setUpload(!upload);
+        setUpdate(!update);
+        setUpdate(!update);
       }
     });
   };
@@ -417,7 +451,8 @@ const Backoffice = ({auth}) => {
         setMessageSnackBar('Nuevo tipo de proyecto generado correctamente');
         setSeveritySnackBar('success');
         setOpen(true);
-        setUpload(!upload);
+        setUpdate(!update);
+        setUpdate(!update);
       }
     });
   };
@@ -435,18 +470,18 @@ const Backoffice = ({auth}) => {
         setMessageSnackBar('Nueva novedad generada correctamente');
         setSeveritySnackBar('success');
         setOpen(true);
-        setUpload(!upload);
+        setUpdate(!update);
+        setUpdate(!update);
       }
     });
   };
 
-  const handleChangeAlumnos = (event) => {
-    event.preventDefault();
+  const handleChangeAlumnos = (e) => {
+    e.preventDefault();
     const {
       target: { value },
-    } = event;
+    } = e;
     setAlumnoName(
-      // On autofill we get a the stringified value.
       typeof value === 'string' ? value.split(',') : value,
     );
   };
@@ -466,21 +501,23 @@ const Backoffice = ({auth}) => {
     e.preventDefault();
     if (estado === 'S') {
       axios.put(apiURL + '/api/usuario/deshabilitarusuario', {id: id}, {headers}).then((response) => {
-        setUpload(!upload);
-        setUpload(!upload);
+        setUpdate(!update);
+        setUpdate(!update);
       });
     } else {
       axios.put(apiURL + '/api/usuario/habilitarusuario', {id: id}, {headers}).then((response) => {
-        setUpload(!upload);
-        setUpload(!upload);
+        setUpdate(!update);
+        setUpdate(!update);
       });
     }
   };
 
 
+
+
   return(
-    <Container maxWidth="xl"
-      sx={{ padding: {xs: '0.5em', md: '0.5em', lg: '4em'} }}
+    <><Container maxWidth="xl"
+      sx={{ padding: { xs: '0.5em', md: '0.5em', lg: '4em' } }}
     >
       <Tabs
         value={valuePanel}
@@ -518,8 +555,8 @@ const Backoffice = ({auth}) => {
           }}
         >
           <TabPanel value={valuePanel} index={0}>
-            <Typography variant="h5" color="text.secondary">Alta cursada</Typography><br />
-            <Typography variant="body2" color="text.secondary">Ingrese el código único que tendra esta cursada</Typography>
+            <Typography variant="h5" color="secondary">Alta cursada</Typography><br />
+            <Typography variant="body2" color="text">Ingrese el código único que tendra esta cursada</Typography>
             <div
               style={{
                 display: 'flex',
@@ -527,73 +564,71 @@ const Backoffice = ({auth}) => {
                 marginTop: '2em',
                 marginBottom: '2em',
               }}>
-                <form
-                  className="forms"
-                  onSubmit={submitNuevaCursada}
-                  name="cursada"
+              <form
+                className="forms"
+                onSubmit={submitNuevaCursada}
+                name="cursada"
+              >
+                <TextField
+                  label="Código Cursada"
+                  required
+                  fullWidth
+                  name="codCursada" />
+                <TextField
+                  label="Descripción"
+                  required
+                  fullWidth
+                  name="descripcion"
+                  sx={{ mt: 3, width: '100%' }} />
+                <Typography variant="body2" sx={{ mt: 2, width: '100%' }} color="text.secondary">Fecha inicio</Typography>
+                <input type="date" name="fechaInicio" required />
+                <Typography variant="body2" sx={{ mt: 2, width: '100%' }} color="text.secondary">Fecha fin</Typography>
+                <input type="date" name="fechaFin" required />
+                <Button
+                  type="submit"
+                  fullWidth
+                  color="secondary"
+                  variant="contained"
+                  sx={{ mt: 3, mb: 2 }}
                 >
-                  <TextField
-                    label="Código Cursada"
-                    required
-                    fullWidth
-                    name="codCursada"
-                  />
-                  <TextField
-                    label="Descripción"
-                    required
-                    fullWidth
-                    name="descripcion"
-                  />
-                  <Typography variant="body2" color="text.secondary">Fecha inicio</Typography>
-                  <input type="date" name="fechaInicio" required />
-                  <Typography variant="body2" color="text.secondary">Fecha fin</Typography>
-                  <input type="date" name="fechaFin" required />
-                  <Button
-                    type="submit"
-                    fullWidth
-                    color="secondary"
-                    variant="contained"
-                    sx={{ mt: 3, mb: 2 }}
-                  >
-                    Confirmar cursada
-                  </Button>
-                </form>
-              </div>
-            <Divider /><br />
-            <Typography variant="h5" color="text.secondary">Nueva Categoría</Typography><br />
-            <Typography variant="body2" color="text.secondary">Ingrese el nombre de la nueva categoría para luego asignarla a un proyecto</Typography>
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-               // width: '50%',
-                marginTop: '2em',
-                marginBottom: '2em',
-              }}>
-                <form
-                  className="forms"
-                 onSubmit={submitNuevaCategoria}
-                  name="categoria"
-                >
-                  <TextField
-                    label="Nombre Categoria"
-                    required
-                    fullWidth
-                    name="descripcion"
-                  />
-                  <Button
-                    fullWidth
-                    variant="contained"
-                    color="secondary"
-                    type="submit"
-                    sx={{ mt: 3, mb: 2 }}
-                    >GUARDAR CATEGORÍA
-                    </Button>
-                </form>
+                  Confirmar cursada
+                </Button>
+              </form>
             </div>
             <Divider /><br />
-            <Typography variant="h5" color="text.secondary">Nuevo Tipo de Proyecto</Typography><br />
-            <Typography variant="body2" color="text.secondary">Ingrese el nombre del tipo de proyecto</Typography>
+            <Typography variant="h5" color="secondary">Nueva Categoría</Typography><br />
+            <Typography variant="body2" color="text">Ingrese el nombre de la nueva categoría para luego asignarla a un proyecto</Typography>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                // width: '50%',
+                marginTop: '2em',
+                marginBottom: '2em',
+              }}>
+              <form
+                className="forms"
+                onSubmit={submitNuevaCategoria}
+                name="categoria"
+              >
+                <TextField
+                  label="Nombre Categoria"
+                  required
+                  fullWidth
+                  name="descripcion" />
+                <Button
+                  fullWidth
+                  variant="contained"
+                  color="secondary"
+                  type="submit"
+                  sx={{ mt: 3, mb: 2 }}
+                >GUARDAR CATEGORÍA
+                </Button>
+              </form>
+            </div>
+            <Divider /><br />
+            <Typography variant="h5" color="secondary">Nuevo Tipo de Proyecto</Typography><br />
+            <Typography variant="body2" color="text">Ingrese el nombre del tipo de proyecto</Typography>
             <div
               style={{
                 display: 'flex',
@@ -601,42 +636,41 @@ const Backoffice = ({auth}) => {
                 marginTop: '2em',
                 marginBottom: '2em',
               }}>
-                <form
-                  className="forms"
-                 onSubmit={submitNuevoTipoProyecto}
-                  name="categoria"
-                >
-                  <TextField
-                    label="Nombre Tipo de Proyecto"
-                    required
-                    fullWidth
-                    name="descripcion"
-                  />
-                  <Button
-                    fullWidth
-                    variant="contained"
-                    color="secondary"
-                    type="submit"
-                    sx={{ mt: 3, mb: 2 }}
-                    >GUARDAR TIPO PROYECTO
-                    </Button>
-                </form>
+              <form
+                className="forms"
+                onSubmit={submitNuevoTipoProyecto}
+                name="categoria"
+              >
+                <TextField
+                  label="Nombre Tipo de Proyecto"
+                  required
+                  fullWidth
+                  name="descripcion" />
+                <Button
+                  fullWidth
+                  variant="contained"
+                  color="secondary"
+                  type="submit"
+                  sx={{ mt: 3, mb: 2 }}
+                >GUARDAR TIPO PROYECTO
+                </Button>
+              </form>
             </div>
           </TabPanel>
           <TabPanel value={valuePanel} index={1}>
-          <Typography variant="h5" color="text.secondary">Tabla de Alumnos</Typography><br />
-            <Typography variant="body2" color="text.secondary">Información de alumnos - Puede habilitarlos o deshabilitarlos</Typography><br />
+            <Typography variant="h5" color="secondary">Tabla de Alumnos</Typography><br />
+            <Typography variant="body2" color="text">Información de alumnos - Puede habilitarlos o deshabilitarlos</Typography><br />
             <ExcelFile
               filename="Alumnos"
-              element={<Button style={{ float: 'right'}} size="small" variant="contained" color="secondary">Exportar excel</Button>}
+              element={<Button style={{ float: 'right' }} size="small" variant="contained" color="secondary">Exportar excel</Button>}
             >
-                <ExcelSheet data={alumnos} name="Alumnos">
-                    <ExcelColumn label="Alumno" value="nombre"/>
-                    <ExcelColumn label="DNI" value="dni"/>
-                    <ExcelColumn label="email" value="email"/>
-                </ExcelSheet>
+              <ExcelSheet data={alumnos} name="Alumnos">
+                <ExcelColumn label="Alumno" value="nombre" />
+                <ExcelColumn label="DNI" value="dni" />
+                <ExcelColumn label="email" value="email" />
+              </ExcelSheet>
             </ExcelFile>
-            <TableContainer component={Paper}  sx={{ maxHeight: 350, marginTop: '3em' }}>
+            <TableContainer component={Paper} sx={{ maxHeight: 350, marginTop: '3em' }}>
               <Table stickyHeader aria-label="sticky table">
                 <TableHead>
                   <TableRow>
@@ -647,106 +681,112 @@ const Backoffice = ({auth}) => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                {alumnos.map((row) => (
-                  <TableRow
-                    key={row.name}
-                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                  >
-                    <TableCell  component="th" scope="row">
-                      {row.nombre}
-                    </TableCell>
-                    <TableCell align="left">{row.dni}</TableCell>
-                    <TableCell align="left">{row.email}</TableCell>
-                    <TableCell align="center">
-                    <Button onClick={(e) => disabledAlumno(e, row.estado, row.id)} color="secondary">
-                      {row.estado === 'S' ?
-                        <Tooltip title="Deshabilitar">
-                          <DoNotDisturbAltIcon color="error"/>
-                        </Tooltip> :
-                        <Tooltip title="Habilitar">
-                          <CheckCircleOutlineRoundedIcon color="success" />
-                        </Tooltip>
-                        }
-                      
-                    </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                  {alumnos.map((row) => (
+                    <TableRow
+                      key={row.name}
+                      sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                    >
+                      <TableCell component="th" scope="row">
+                        {row.nombre}
+                      </TableCell>
+                      <TableCell align="left">{row.dni}</TableCell>
+                      <TableCell align="left">{row.email}</TableCell>
+                      <TableCell align="center">
+                        <Button onClick={(e) => disabledAlumno(e, row.estado, row.id)} color="secondary">
+                          {row.estado === 'S' ?
+                            <Tooltip title="Deshabilitar">
+                              <DoNotDisturbAltIcon color="error" />
+                            </Tooltip> :
+                            <Tooltip title="Habilitar">
+                              <CheckCircleOutlineRoundedIcon color="success" />
+                            </Tooltip>}
+
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
                 </TableBody>
               </Table>
-            </TableContainer><br />  
+            </TableContainer><br />
             <Divider /> <br />
-          <Typography variant="h5" color="text.secondary">Alta de profesor</Typography><br />
-            <Typography variant="body2" color="text.secondary">Complete los campos para poder dar de alta a un profesor</Typography>
-            <form
-              className="forms form-profesor"
-              onSubmit={altaProfesor}
-              name="altaProfesor"
+            <Typography variant="h5" color="secondary">Alta de profesor</Typography><br />
+            <Typography variant="body2" color="text">Complete los campos para poder dar de alta a un profesor</Typography>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                marginTop: '2em',
+                marginBottom: '2em',
+              }}
             >
-                <div
-                  className="container-form"
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  flexWrap: 'wrap',
-                  marginTop: '2em',
-                  marginBottom: '2em',
-                }}>
-                  <TextField
-                    key="nombre"
-                    name="nombre"
-                    className="textField"
-                    label="Nombre"
-                  />
-                  <TextField
-                    key="dni"
-                    name="dni"
-                    className="textField"
-                    label="Dni"
-                  />
-                  <TextField
-                    key="edad"
-                    name="edad"
-                    className="textField"
-                    label="Edad"
-                  />
-                  <TextField
-                    key="email"
-                    name="email"
-                    className="textField"
-                    label="Email"
-                  />
-                  <TextField
-                    key="emailunlam"
-                    name="emailunlam"
-                    className="textField"
-                    label="Email Unlam"
-                  />
-                  <TextField
-                    key="descripcion"
-                    name="descripcion"
-                    className="textField"
-                    label="Descripción"
-                  />
-              </div>
-              <div style={{ display: 'flex', widht: '50%' }}>
+              <form
+                className="forms"
+                onSubmit={altaProfesor}
+                name="altaProfesor"
+              >
+                <TextField
+                  key="nombre"
+                  name="nombre"
+                  className="textField"
+                  label="Nombre"
+                  required
+                  fullWidth
+                  sx={{ mt: 2, width: '100%' }} />
+                <TextField
+                  key="dni"
+                  name="dni"
+                  className="textField"
+                  label="Dni"
+                  required
+                  fullWidth
+                  sx={{ mt: 2, width: '100%' }} />
+                <TextField
+                  key="edad"
+                  name="edad"
+                  className="textField"
+                  label="Edad"
+                  required
+                  fullWidth
+                  sx={{ mt: 2, width: '100%' }} />
+                <TextField
+                  key="email"
+                  name="email"
+                  className="textField"
+                  label="Email"
+                  required
+                  fullWidth
+                  sx={{ mt: 2, width: '100%' }} />
+                <TextField
+                  key="emailunlam"
+                  name="emailunlam"
+                  className="textField"
+                  label="Email Unlam"
+                  required
+                  fullWidth
+                  sx={{ mt: 2, width: '100%' }} />
+                <TextField
+                  key="descripcion"
+                  name="descripcion"
+                  className="textField"
+                  label="Descripción"
+                  required
+                  fullWidth
+                  sx={{ mt: 2, width: '100%' }} />
                 <Button
-                  style={{ alignItems: 'center' }}
                   variant="contained"
+                  fullWidth
                   color="secondary"
                   type="submit"
-                  style={{ width: '13em', height: '2em', marginBottom: '2em' }}
-                  >GUARDAR PROFESOR
-                  </Button>
-              </div>
-            </form>
+                  sx={{ mt: 3, mb: 2 }}
+                >GUARDAR PROFESOR
+                </Button>
+              </form>
+            </div>
             <Divider />
-            <Typography variant="h5" color="text.secondary" 
+            <Typography variant="h5" color="secondary"
               style={{ marginTop: '1em' }}>Alta masiva de alumnos</Typography><br />
-            <Typography variant="body2" color="text.secondary">Seleccione el excel de alumnos para el alta masiva</Typography>
+            <Typography variant="body2" color="text">Seleccione el excel de alumnos para el alta masiva</Typography>
             <div
-              
-              className="container-form"
               style={{
                 display: 'flex',
                 justifyContent: 'space-between',
@@ -762,11 +802,9 @@ const Backoffice = ({auth}) => {
                   disabled
                   id="cursada"
                   name="cursada"
-                  value={cursada.codCursada ? cursada.codCursada : ''}
-                />
+                  value={cursada.codCursada ? cursada.codCursada : ''} />
                 <input
-                  className="input-file"
-                  style={{ marginTop: '1em'}}
+                  style={{ marginTop: '1em' }}
                   type="file"
                   value={selectedFile}
                   onChange={convertToJson}>
@@ -775,7 +813,8 @@ const Backoffice = ({auth}) => {
                   variant="contained"
                   color="secondary"
                   onClick={() => altaAlumnosMasiva()}
-                  style={{ width: '10em', height: '2em', marginTop: '0.5em' }}
+                  sx={{ mt: 3, mb: 2 }}
+                  fullWidth
                 >ALTA MASIVA
                 </Button>
               </form>
@@ -783,91 +822,97 @@ const Backoffice = ({auth}) => {
             <Divider />
             <Typography
               variant="h5"
-              color="text.secondary"
+              color="secondary"
               style={{ marginTop: '1em' }}
             >Alta manual de alumnos</Typography><br />
-            <Typography variant="body2" color="text.secondary">Si necesita o prefiere puede dar de alta por cada alumno</Typography>
-            <form
-              className="forms form-profesor"
-              onSubmit={altaAlumnoIndividual}
-              name="altaManualAlumnos"
-            >
-              <div
-                className="container-form"
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  flexWrap: 'wrap',
-                  marginTop: '2em',
-                  marginBottom: '2em',
-                }}>
-                  <TextField
-                    key="cursada"
-                    label="N° Cursada"
-                    disabled
-                    id="cursada"
-                    name="cursada"
-                    value={cursada.codCursada ? cursada.codCursada : ''}
-                  />
-                  <TextField
-                    key="nombre"
-                    name="nombre"
-                    className="textField"
-                    label="Nombre"
-                  />
-                  <TextField
-                    key="dni"
-                    name="dni"
-                    className="textField"
-                    label="Dni"
-                  />
-                  <TextField
-                    key="edad"
-                    name="edad"
-                    className="textField"
-                    label="Edad"
-                  />
-                  <TextField
-                    key="email"
-                    name="email"
-                    className="textField"
-                    label="Email"
-                  />
-                  <TextField
-                    key="emailunlam"
-                    name="emailunlam"
-                    className="textField"
-                    label="Email Unlam"
-                  />
-              </div>
-              <div style={{ display: 'flex',  widht: '50%' }}>
+            <Typography variant="body2" color="text">Si necesita o prefiere puede dar de alta por cada alumno</Typography>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                marginTop: '2em',
+                marginBottom: '2em',
+              }}>
+              <form
+                className="forms"
+                onSubmit={altaAlumnoIndividual}
+                name="altaManualAlumnos"
+              >
+                <TextField
+                  key="cursada"
+                  label="N° Cursada"
+                  disabled
+                  id="cursada"
+                  name="cursada"
+                  value={cursada.codCursada ? cursada.codCursada : ''}
+                  sx={{ width: '100%' }} />
+                <TextField
+                  key="nombre"
+                  name="nombre"
+                  className="textField"
+                  label="Nombre"
+                  required
+                  fullWidth
+                  sx={{ mt: 2, width: '100%' }} />
+                <TextField
+                  key="dni"
+                  name="dni"
+                  className="textField"
+                  label="Dni"
+                  required
+                  fullWidth
+                  sx={{ mt: 2, width: '100%' }} />
+                <TextField
+                  key="edad"
+                  name="edad"
+                  className="textField"
+                  label="Edad"
+                  required
+                  fullWidth
+                  sx={{ mt: 2, width: '100%' }} />
+                <TextField
+                  key="email"
+                  name="email"
+                  className="textField"
+                  label="Email"
+                  required
+                  fullWidth
+                  sx={{ mt: 2, width: '100%' }} />
+                <TextField
+                  key="emailunlam"
+                  name="emailunlam"
+                  className="textField"
+                  label="Email Unlam"
+                  required
+                  fullWidth
+                  sx={{ mt: 2, width: '100%' }} />
                 <Button
-                  style={{ alignItems: 'center' }}
                   variant="contained"
                   color="secondary"
                   type="submit"
-                  style={{ width: '12em', height: '2em', marginBottom: '2em' }}
-                  >GUARDAR ALUMNO
-                  </Button>
-              </div>
-            </form>
+                  sx={{ mt: 3, mb: 2 }}
+                  fullWidth
+                >GUARDAR ALUMNO
+                </Button>
+              </form>
+            </div>
             <Divider />
           </TabPanel>
           <TabPanel value={valuePanel} index={2}>
-            <Typography variant="h5" color="text.secondary">Tabla de Equipos</Typography><br />
-            <Typography variant="body2" color="text.secondary">Información de equipos - Puede editarlos y asignarle un proyecto</Typography><br />
+            <Typography variant="h5" color="secondary">Tabla de Equipos</Typography><br />
+            <Typography variant="body2" color="text">Información de equipos - Puede editarlos y asignarle un proyecto</Typography><br />
             <ExcelFile
               filename="Equipos"
-              element={<Button style={{ float: 'right'}} size="small" variant="contained" color="secondary">Exportar excel</Button>}
+              element={<Button style={{ float: 'right' }} size="small" variant="contained" color="secondary">Exportar excel</Button>}
             >
-                <ExcelSheet data={rowsEquipos} name="Equipos">
-                    <ExcelColumn label="Marca" value="marca"/>
-                    <ExcelColumn label="Concepto" value="concepto"/>
-                    <ExcelColumn label="Propuesta de Valor" value="valor"/>
-                    <ExcelColumn label="Alumno" value="alumno"/>
-                </ExcelSheet>
+              <ExcelSheet data={rowsEquipos} name="Equipos">
+                <ExcelColumn label="Marca" value="marca" />
+                <ExcelColumn label="Concepto" value="concepto" />
+                <ExcelColumn label="Propuesta de Valor" value="valor" />
+                <ExcelColumn label="Alumno" value="alumno" />
+              </ExcelSheet>
             </ExcelFile>
-            <TableContainer component={Paper} style={{marginTop: '3em'}}>
+            <TableContainer component={Paper} style={{ marginTop: '3em' }}>
               <Table aria-label="collapsible table">
                 <TableHead>
                   <TableRow>
@@ -883,14 +928,14 @@ const Backoffice = ({auth}) => {
                 </TableHead>
                 <TableBody>
                   {rowsEquipos.map((row) => (
-                    <Row key={row.id} row={row} />
+                    <Row key={row.id} row={row} update={update} />
                   ))}
                 </TableBody>
               </Table>
-            </TableContainer><br />  
+            </TableContainer><br />
             <Divider /> <br />
-            <Typography variant="h5" color="text.secondary">Creación de Equipo</Typography><br />
-            <Typography variant="body2" color="text.secondary">Ingrese nombre, seleccione todos los participantes y mínimo un profesor / mentor</Typography>
+            <Typography variant="h5" color="secondary">Creación de Equipo</Typography><br />
+            <Typography variant="body2" color="text">Ingrese nombre, seleccione todos los participantes y mínimo un profesor / mentor</Typography>
             <div
               style={{
                 display: 'flex',
@@ -899,89 +944,88 @@ const Backoffice = ({auth}) => {
                 marginTop: '2em',
                 marginBottom: '2em',
               }}>
-                <form
-                  className="forms"
-                  onSubmit={submitNuevoEquipo}
-                  name="equipo"
-                >
-                  <TextField
-                    label="Nombre"
-                    required
-                    fullWidth
-                    name="nombre"
-                  />
-                  <FormControl sx={{ mt: 5, width: '100%' }} name="alumnos">
-                    <InputLabel id="demo-multiple-chip-label">Alumnos</InputLabel>
-                    <Select
-                      labelId="demo-multiple-chip-label"
-                      id="demo-multiple-chip"
-                      multiple
-                      value={alumnoName}
-                      onChange={handleChangeAlumnos}
-                      input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
-                      renderValue={(selected) => (
-                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                          {selected.map((value) => (
-                            <Chip key={value} label={value} />
-                          ))}
-                        </Box>
-                      )}
-                      MenuProps={MenuProps}
-                      name="alumnos"
-                    >
-                      {alumnos.map((al) => (
-                        <MenuItem
-                          key={al.id}
-                          value={al.nombre}
-                        >
-                          {al.nombre}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                  <FormControl sx={{ mt: 5, width: '100%' }} name="profesores">
-                    <InputLabel id="demo-multiple-chip-label">Profesor / Mentor</InputLabel>
-                    <Select
-                      labelId="demo-profesores"
-                      id="demo-multiple-chip-profesores"
-                      multiple
-                      value={profesorName}
-                      onChange={handleChangeProfesores}
-                      input={<OutlinedInput id="select-multiple-chip-profesor" label="Chip" />}
-                      renderValue={(selected) => (
-                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                          {selected.map((value) => (
-                            <Chip key={value} label={value} />
-                          ))}
-                        </Box>
-                      )}
-                      MenuProps={MenuProps}
-                    >
-                      {profesores.map((pro) => (
-                        <MenuItem
-                          key={pro.id}
-                          value={pro.nombre}
-                        >
-                          {pro.nombre}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                  <Button
-                    type="submit"
-                    fullWidth
-                    color="secondary"
-                    variant="contained"
-                    sx={{ mt: 3, mb: 2 }}
+              <form
+                className="forms"
+                onSubmit={submitNuevoEquipo}
+                name="equipo"
+              >
+                <TextField
+                  label="Nombre"
+                  required
+                  fullWidth
+                  name="nombre" />
+                <FormControl sx={{ mt: 5, width: '100%' }} name="alumnos">
+                  <InputLabel id="demo-multiple-chip-label">Alumnos</InputLabel>
+                  <Select
+                    labelId="demo-multiple-chip-label"
+                    id="demo-multiple-chip"
+                    multiple
+                    value={alumnoName}
+                    onChange={e => handleChangeAlumnos(e)}
+                    input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
+                    renderValue={(selected) => (
+                      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                        {selected.map((value) => (
+                          <Chip key={value} label={value} />
+                        ))}
+                      </Box>
+                    )}
+                    MenuProps={MenuProps}
+                    name="alumnos"
                   >
-                    Confirmar equipo
-                  </Button>
-                </form>
-              </div>
+                    {alumnos.map((al) => (
+                      <MenuItem
+                        key={al.id}
+                        value={al.nombre}
+                      >
+                        {al.nombre}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+                <FormControl sx={{ mt: 5, width: '100%' }} name="profesores">
+                  <InputLabel id="demo-multiple-chip-label">Profesor / Mentor</InputLabel>
+                  <Select
+                    labelId="demo-profesores"
+                    id="demo-multiple-chip-profesores"
+                    multiple
+                    value={profesorName}
+                    onChange={handleChangeProfesores}
+                    input={<OutlinedInput id="select-multiple-chip-profesor" label="Chip" />}
+                    renderValue={(selected) => (
+                      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                        {selected.map((value) => (
+                          <Chip key={value} label={value} />
+                        ))}
+                      </Box>
+                    )}
+                    MenuProps={MenuProps}
+                  >
+                    {profesores.map((pro) => (
+                      <MenuItem
+                        key={pro.id}
+                        value={pro.nombre}
+                      >
+                        {pro.nombre}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+                <Button
+                  type="submit"
+                  fullWidth
+                  color="secondary"
+                  variant="contained"
+                  sx={{ mt: 3, mb: 2 }}
+                >
+                  Confirmar equipo
+                </Button>
+              </form>
+            </div>
           </TabPanel>
           <TabPanel value={valuePanel} index={3}>
-            <Typography variant="h5" color="text.secondary">Alta Novedad</Typography><br />
-            <Typography variant="body2" color="text.secondary">Complete los siguientes campos para poder dar alta una novedad.</Typography>
+            <Typography variant="h5" color="secondary">Alta Novedad</Typography><br />
+            <Typography variant="body2" color="text">Complete los siguientes campos para poder dar alta una novedad.</Typography>
             <div
               style={{
                 display: 'flex',
@@ -989,46 +1033,43 @@ const Backoffice = ({auth}) => {
                 marginTop: '2em',
                 marginBottom: '2em',
               }}>
-                <form
-                  className="forms"
-                  onSubmit={submitNuevaNovedad}
-                  name="novedad"
+              <form
+                className="forms"
+                onSubmit={submitNuevaNovedad}
+                name="novedad"
+              >
+                <TextField
+                  label="Descripción"
+                  required
+                  fullWidth
+                  name="descripcion" />
+                <Button
+                  variant="raised"
+                  component="label"
+                  style={{ marginTop: '1em' }}
                 >
-                  <TextField
-                    label="Descripción"
-                    required
-                    fullWidth
-                    name="descripcion"
-                  />
-                  <Button
-                    variant="raised"
-                    component="label"
-                    style={{ marginTop: '1em'}}
-                  >
-                    <input
-                      type="file"
-                      name="foto"
-                     // hidden
-                     required
-                    />
-                  </Button>
-                  <TextField
-                    style={{ marginTop: '1em'}}
-                    label="Ruta del Video"
-                    fullWidth
-                    name="rutaVideo"
-                  />
-                  <Button
-                    type="submit"
-                    fullWidth
-                    color="secondary"
-                    variant="contained"
-                    sx={{ mt: 3, mb: 2 }}
-                  >
-                    Confirmar novedad
-                  </Button>
-                </form>
-              </div>
+                  <input
+                    type="file"
+                    name="foto"
+                    // hidden
+                    required />
+                </Button>
+                <TextField
+                  style={{ marginTop: '1em' }}
+                  label="Ruta del Video"
+                  fullWidth
+                  name="rutaVideo" />
+                <Button
+                  type="submit"
+                  fullWidth
+                  color="secondary"
+                  variant="contained"
+                  sx={{ mt: 3, mb: 2 }}
+                >
+                  Confirmar novedad
+                </Button>
+              </form>
+            </div>
             <Divider /><br />
           </TabPanel>
           <TabPanel value={valuePanel} index={4}>
@@ -1040,20 +1081,20 @@ const Backoffice = ({auth}) => {
         open={open}
         autoHideDuration={6000}
         onClose={handleClose}
-        anchorOrigin={{vertical: 'top', horizontal: 'center'}}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       >
         <Alert
-        onClose={handleClose}
-        severity={severitySnackBar} sx={{ width: '100%' }}>
+          onClose={handleClose}
+          severity={severitySnackBar} sx={{ width: '100%' }}>
           {messageSnackBar}
         </Alert>
       </Snackbar>
-    </Container>
+    </Container><Footer /></>
   )
 };
 
 function Row(props) {
-  const { row } = props;
+  const { row, update } = props;
   const [open, setOpen] = React.useState(false);
   const [openSnack, setOpenSnack] = React.useState(false);
   const [messageSnackBar, setMessageSnackBar] = React.useState('');
@@ -1116,13 +1157,15 @@ function Row(props) {
     });
   };
 
-  const confirmDeshabilitarEquipo = (e, estado) => {
+  const confirmDeshabilitarEquipo = (e, estado, id) => {
     e.preventDefault();
     if (estado === 'S') {
-      axios.put(apiURL + '/api/equipopersona/deshabilitarequipo', {id: e.target.id.value}, {headers}).then((response) => {
+      axios.put(apiURL + '/api/equipopersona/deshabilitarequipo', {idEquipo: id}, {headers}).then((response) => {
+        if (response) {
+        }
       });
     } else {
-      axios.put(apiURL + '/api/equipopersona/habilitarequipo', {id: e.target.id.value}, {headers}).then((response) => {
+      axios.put(apiURL + '/api/equipopersona/habilitarequipo', {idEquipo: id}, {headers}).then((response) => {
       });
     }
   };
@@ -1167,10 +1210,17 @@ function Row(props) {
           />
         </TableCell>
         <TableCell align="left">
-          <ModalEquipoDisabled
-            equipo={row}
-            handleDeshabilitarEquipo={() => confirmDeshabilitarEquipo}
-          />
+        <Button onClick={(e) => confirmDeshabilitarEquipo(e, row.estado, row.id)} color="secondary">
+          {row.estado === 'S' ?
+            <Tooltip title="Deshabilitar">
+              <DoNotDisturbAltIcon color="error"/>
+            </Tooltip> :
+            <Tooltip title="Habilitar">
+              <CheckCircleOutlineRoundedIcon color="success" />
+            </Tooltip>
+            }
+          
+        </Button>
         </TableCell>
       </TableRow>
       <TableRow>

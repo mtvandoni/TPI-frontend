@@ -6,6 +6,7 @@ import axios from 'axios';
 import './home.css';
 
 import CardCustom from '../../components/card/Card';
+import Footer from '../../components/footer/Footer';
 
 import Container from '@mui/material/Container';
 import { Typography,
@@ -30,56 +31,37 @@ const Home = () => {
 
   const headers = { 
     'Authorization': session().token,
+    'Access-Control-Allow-Origin': '*',
     'Content-type': 'application/json; charset=iso-8859-1',
+    'Access-Control-Allow-Credentials': true,
+    'Access-Control-Allow-Headers': '*',
   };
   const apiURL = "https://localhost:44311";
 
   React.useEffect(() => { 
     axios.get(apiURL + "/api/proyecto", {headers})
       .then(response => {
-        const team = [];
-        // setProyectoFilter(response.data);
-        // setProyecto(response.data);
-        team.push(response.data);
-        axios.get(apiURL + '/api/equipopersona', {headers})
-          .then((response) => {
-            if (response) {
-              team.push(response.data);
-            }
-            
-            axios.get(apiURL + '/api/equipo', {headers})
-            .then((response) => {
-              if (response) {
-                team.push(response.data);
-              }
-
-            axios.get(apiURL + '/api/usuario', {headers})
-              .then((response) => {
-                if (response) {
-                  team.push(response.data);
-              setProyectoFilter(normalizeProyectos(team));
-              setProyecto(normalizeProyectos(team));
-              setMasVotados(getMasVotados(team));
-                }
-              });
-            });
+        setProyectoFilter(response.data);
+        setProyecto(response.data);
           });
-        });
     axios.get(apiURL + "/api/categoria", {headers})
       .then(response => {
         setCategorias(response.data);
       });
+
+    axios.get(apiURL + "/api/proyecto/masvotados", {headers}).then((response) => {
+      console.log(response);
+      setMasVotados(response.data);
+    })
   }, [])
 
   const handleClickCategory = (id, title) => {
     setFilterCategory(title);
-    console.log(id,title);
     const object = [];
     if (id) {
       if (proyecto) {
         proyectoFilter.forEach((item) => {
-          console.log('item', item.data);
-          if (item.data?.idCategoria === id) {
+          if (item.categoria === title) {
             object.push(item);
           }
         });
@@ -90,7 +72,7 @@ const Home = () => {
     }
   };
 
-  const normalizeProyectos = (data) => {
+  /* const normalizeProyectos = (data) => {
     if (data) {
       const proyectos = data[0];
       const equiposPersonas = data[1];
@@ -134,37 +116,8 @@ const Home = () => {
 
       return all;
     }
-  };
+  }; */
 
-  const getMasVotados = (data) => {
-    const proyectos = data[0]
-    const masVotados = [];
-    const todo = [];
-    if (proyectos) {
-      proyectos.forEach((item) => {
-       todo.push(item.cantMeGusta);
-      })
-    }
-    
-    const aux = todo.sort(function (a, b) { return b - a; }).slice(0, 2);
-    masVotados.push(aux);
-    
-    const array = [];
-    masVotados.forEach((item) => {
-      if (item) {
-        const aux = proyectos.find(x => x.cantMeGusta === item);
-        if (aux) {
-          console.log('asd');
-        }
-        array.push(aux);
-      }
-    });
-    console.log('array', array);
-    data[0] = array;
-    console.log(data);
-    // TODO mas votados
-    // return normalizeProyectos(data);
-  };
 
   return(
     <>
@@ -179,9 +132,9 @@ const Home = () => {
             backgroundSize: 'cover'
           }}
         >
-          <Container sx={{ paddingTop: {xs: '24em', sm: '23em', md: '23em', lg: '20em'}}}>
+          <Container sx={{ paddingTop: {xs: '24em', sm: '23em', md: '23em', lg: '37em'}}}>
             <Paper
-              sx={{ padding: '1em 1.5em 1.5em 1em', width: {xs: '18em', md: '20em', lg:'20em'}}}
+              sx={{ padding: '1em 1.5em 1.5em 1em', width: {xs: '18em', md: '20em', lg:'40em'}}}
               elevation={3}
             >
               <Typography
@@ -203,13 +156,13 @@ const Home = () => {
         <Box
           sx={{
             height: '78vh',
-            background: `url('https://lh3.googleusercontent.com/proxy/GdrafxmHml21UXlZ7-cVjJ_9PYGO44VHc8sVnhc4FDNac1k6QMnu7_sSkLQ5VoNwVt2iLmWe182JqILXNgYrzLF6XmuO2L6j57PluUxmcRqL') no-repeat center`, 
+            background: `url('https://www.eafit.edu.co/escuelas/ciencias/noticias/PublishingImages/mediacion.jpg') no-repeat center`, 
             backgroundSize: 'cover'
           }}
         >
-          <Container sx={{ paddingTop: {xs: '24em', sm: '23em', md: '23em', lg: '20em'}}}>
+          <Container sx={{ paddingTop: {xs: '24em', sm: '23em', md: '23em', lg: '37em'}}}>
             <Paper
-              sx={{ padding: '1em 1.5em 1.5em 1em', width: {xs: '18em', md: '20em', lg:'20em'}}}
+              sx={{ padding: '1em 1.5em 1.5em 1em', width: {xs: '18em', md: '20em', lg:'40em'}}}
               elevation={3}
             >
               <Typography
@@ -258,12 +211,17 @@ const Home = () => {
           justifyContent: 'space-around',
           flexWrap: 'wrap',
           marginBottom: '4em',
-          height: '20vh'
+          minHeight: '20vh'
         }}>
-          Coming Soon...
-          {/*<CardCustom title='EducApp' body='La app EducApp loremp impsum' category='Educacion' img="https://thumbs.dreamstime.com/b/aprendizaje-electr%C3%B3nico-app-del-vector-49960281.jpg" />
-          <CardCustom title='MercadoPago' body='La app MercadoPago lorem impsum' category='Fintech' img="https://future.inese.es/wp-content/uploads/2020/02/fintechfuture.jpg" />
-          <CardCustom title='OsdeApp' body='La app OsdeApp lorem impsmum' category='Salud' img="https://www.nalgeneiberia.com/wp-content/uploads/2016/02/1602_Nalgene_blog_5appssalud_01-770x452.jpg" /> */}
+          {masVotados.length > 0 && masVotados.map((pro) => (
+            <CardCustom
+              key={pro?.idProyecto}
+              type="proyecto"
+              data={pro}
+              participantes={pro?.participantes}
+              img={process.env.PUBLIC_URL+pro?.rutaFoto ? pro?.rutaFoto : 'noImage.png'}
+            />
+          ))}
         </div>
         <br />
         <Divider />
@@ -351,13 +309,13 @@ const Home = () => {
           marginBottom: '4em',
         }}>
           {
-            proyecto.length > 0 ? proyecto.map((proy) => (
+            proyecto.length > 0 ? proyecto.map((pro) => (
               <CardCustom
-                key={proy?.data?.idProyecto}
+                key={pro?.idProyecto}
                 type="proyecto"
-                data={proy?.data}
-                participantes={proy?.participantes}
-                img={process.env.PUBLIC_URL+proy?.data?.rutaFoto ? proy?.data?.rutaFoto : 'noImage.png'}
+                data={pro}
+                participantes={pro?.participantes}
+                img={process.env.PUBLIC_URL+pro?.rutaFoto ? pro?.rutaFoto : 'noImage.png'}
               />
             )) : <Typography variant="subtitle2" color="inherit" style={{marginTop: '4em'}}>
               Por el momento no hay proyectos con esta categoría
@@ -365,7 +323,10 @@ const Home = () => {
             }
         </div>
       </Container>
-    </Box></>
+    </Box>
+    
+    <Footer />
+    </>
   )
 };
 

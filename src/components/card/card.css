@@ -116,5 +116,9 @@ div .cardPerson {
   .cardPerson .description{
     margin-top: 5em!important;
   }
+
+  .cardPerson .description p {
+    margin-left: -3em;
+  }
 }
 

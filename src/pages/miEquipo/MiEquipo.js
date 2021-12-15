@@ -2,33 +2,21 @@ import React from 'react';
 import axios from 'axios';
 
 import session from '../../services/session';
+import Footer from '../../components/footer/Footer';
 
 import {
   Container,
   Box,
   Paper,
-  Tabs,
-  Tab,
   Typography,
   Button,
   TextField,
   Divider,
   Snackbar,
   Alert,
-  TableRow,
-  TableCell,
-  Collapse,
-  Table,
-  TableHead,
-  TableBody,
-  TableContainer,
-  FormControl,
-  InputLabel,
-  Select,
-  OutlinedInput,
   Chip,
-  MenuItem,
  } from '@mui/material';
+ import './miequipo.css';
 
  const apiURL = 'https://localhost:44311';
  const headers = { 
@@ -46,9 +34,11 @@ const MiEquipo = () => {
   const [open, setOpen] = React.useState(false);
   const [messageSnackBar, setMessageSnackBar] = React.useState('');
   const [severitySnackBar, setSeveritySnackBar] = React.useState('success');
+  const [miEquipo, setMiEquipo] = React.useState([]);
 
   React.useEffect(() => {
     const team = [];
+    console.log(user);
     axios.get(apiURL + '/api/proyecto', {headers})
         .then((response) => {
           if (response) {
@@ -72,6 +62,9 @@ const MiEquipo = () => {
             });
           });
         });
+    axios.post(apiURL + `/api/equipopersona/recuperarintegrantes`,{idPersona: user.id}, {headers}).then((response) => {
+      setMiEquipo(response.data);
+    })
   }, []);
 
   const normalizeInfo = (data) => {
@@ -119,10 +112,8 @@ const MiEquipo = () => {
   };
 
   return (
-    <Container maxWidth="xl"
-      style={{
-        padding: '4em',
-      }}
+    <><Container maxWidth="xl"
+      sx={{ padding: { xs: '0.5em', md: '0.5em', lg: '4em' } }}
     >
       <Box
         sx={{
@@ -146,114 +137,113 @@ const MiEquipo = () => {
           }}
         >
           <Chip label={"Mi Proyecto: " + miInfo?.nombre} color="primary" />
+          <br />
+          <br />
+          <Chip label={"Mi Equipo: " + miEquipo.map((persona) => persona.nombre)} color="primary" />
           <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                width: '100%',
-                marginTop: '2em',
-                marginBottom: '2em',
-              }}>
-                <form
-                  style={{ width: '100%' }}
-                  onSubmit={submitEditProyecto}
-                  name="cursada"
-                >
-                  <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    style={{marginBottom: '1em'}}
-                  >Descripción</Typography>
-                  <TextField
-                    // label="Descripción"
-                    name="descripcion"
-                    value={miInfo?.descripcion}
-                    style={{marginRight: '2em', width: '50em',marginBottom: '2em'}}
-                  />
-                  <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    style={{marginBottom: '1em'}}
-                  >Propuesta de Valor</Typography>
-                  <TextField
-                    // label="Propuesta de Valor"
-                    name="descripcion"
-                    value={miInfo?.propuestaValor}
-                    style={{marginRight: '2em', width: '50em', marginBottom: '2em'}}
-                  />
-                  <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    style={{marginBottom: '1em'}}
-                  >Repositorio</Typography>
-                  <TextField
-                    // label="Repositorio"
-                    name="descripcion"
-                    value={miInfo?.repositorio ? miInfo.repositorio : null}
-                    style={{marginRight: '2em', width: '50em', marginBottom: '2em'}}
-                  />
-                  <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    style={{marginBottom: '1em'}}
-                  >Ruta de video</Typography>
-                  <TextField
-                    // label="Ruta video"
-                    name="rutaVideo"
-                    value={miInfo?.rutaVideo ? miInfo.rutaVideo : null}
-                    style={{marginRight: '2em', width: '50em', marginBottom: '2em'}}
-                  />
-                  <br />
-                  <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    style={{marginBottom: '1em'}}
-                  >Seleccione la imagen principal para su proyecto</Typography>
-                  <Button
-                    variant="raised"
-                    component="label"
-                  >
-                    <input
-                      type="file"
-                      name="foto"
-                     // hidden
-                    />
-                  </Button>
-                  <br/>
-                  <Button
-                    type="submit"
-                    color="secondary"
-                    variant="contained"
-                    sx={{ mt: 3, mb: 2 }}
-                    disabled
-                  >
-                    Guardar cambios
-                  </Button>
-                </form>
-              </div>
-            
-            <Divider />
-            <Typography variant="h5" color="text.secondary" 
-              style={{ marginTop: '1em' }}>Entregas</Typography><br />
-            <Typography variant="body2" color="text.secondary">Seleccione los archivos a entregar</Typography>
-            <div>
-              Very soon...
-            </div>
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              marginTop: '2em',
+              marginBottom: '2em',
+            }}>
+            <form
+              className="forms"
+              onSubmit={submitEditProyecto}
+              name="cursada"
+            >
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{ mt: 2, width: '100%' }}
+              >Descripción</Typography>
+              <TextField
+                name="descripcion"
+                value={miInfo?.descripcion}
+                fullWidth
+                sx={{ mt: 2, width: '100%' }} />
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{ mt: 2, width: '100%' }}
+              >Propuesta de Valor</Typography>
+              <TextField
+                name="descripcion"
+                value={miInfo?.propuestaValor}
+                fullWidth
+                sx={{ mt: 2, width: '100%' }} />
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{ mt: 2, width: '100%' }}
+              >Repositorio</Typography>
+              <TextField
+                name="descripcion"
+                fullWidth
+                value={miInfo?.repositorio ? miInfo.repositorio : null}
+                sx={{ mt: 2, width: '100%' }} />
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{ mt: 2, width: '100%' }}
+              >Ruta de video</Typography>
+              <TextField
+                name="rutaVideo"
+                fullWidth
+                value={miInfo?.rutaVideo ? miInfo.rutaVideo : null}
+                sx={{ mt: 2, width: '100%' }} />
+              <br />
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                style={{ marginBottom: '1em' }}
+              >Seleccione la imagen principal para su proyecto</Typography>
+              <Button
+                variant="raised"
+                component="label"
+                classNamE="buttonLabel"
+              >
+                <input
+                  type="file"
+                  name="foto" />
+              </Button>
+              <br />
+              <Button
+                type="submit"
+                color="secondary"
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+                disabled
+              >
+                Guardar cambios
+              </Button>
+            </form>
+          </div>
+
+          <Divider />
+          <Typography variant="h5" color="text.secondary"
+            style={{ marginTop: '1em' }}>Entregas</Typography><br />
+          <Typography variant="body2" color="text.secondary">Seleccione los archivos a entregar</Typography>
+          <div>
+            Very soon...
+          </div>
         </Paper>
       </Box>
       <Snackbar
         open={open}
         autoHideDuration={6000}
         onClose={handleClose}
-        anchorOrigin={{vertical: 'top', horizontal: 'center'}}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       >
         <Alert
-        onClose={handleClose}
-        severity={severitySnackBar} sx={{ width: '100%' }}>
+          onClose={handleClose}
+          severity={severitySnackBar} sx={{ width: '100%' }}>
           {messageSnackBar}
         </Alert>
       </Snackbar>
     </Container>
+    <Footer />
+    </>
   )
 };
 
