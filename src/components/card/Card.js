@@ -29,7 +29,7 @@ import Slider from "react-slick";
 
 import './card.css';
 
-const apiURL = 'https://localhost:44311';
+const apiURL = 'http://webtpi-001-site1.dtempurl.com';
 const headers = { 
  'Authorization': session().token,
  'Content-type': 'application/json; charset=iso-8859-1',
@@ -55,10 +55,10 @@ const CardCustom = ({type, data, participantes, descripcion, nombre, img, video,
     axios.get(apiURL + '/api/usuario', {headers}).then((response) => {
       const all = [];
       if (response) {
-        all.push(response.data);
+        all.push(response.data.$values);
         axios.get(apiURL + `/api/comentario/${data?.idProyecto}`, {headers}).then((response) => {
           if (response) {
-            all.push(response.data);
+            all.push(response.data.$values);
           }
           setComentarios(normalizeComentarios(all));
         });

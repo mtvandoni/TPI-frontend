@@ -18,7 +18,7 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 
 import session from '../../../services/session';
-const apiURL = 'https://localhost:44311';
+const apiURL = 'http://webtpi-001-site1.dtempurl.com';
 
 const ModalEquipoEdit = ({ equipo, disabled, handleEdicionEquipo }) => {
   const [open, setOpen] = React.useState(false);
@@ -34,13 +34,13 @@ const ModalEquipoEdit = ({ equipo, disabled, handleEdicionEquipo }) => {
   React.useEffect(() => {
     axios.get(apiURL + '/api/tipoProyecto', {headers}).then((response) => {
       if (response) {
-        setTipoProyecto(response.data);
+        setTipoProyecto(response.data.$values);
       }
     });
 
     axios.get(apiURL + '/api/categoria', {headers}).then((response) => {
       if (response) {
-        setCategoria(response.data);
+        setCategoria(response.data.$values);
       }
     })
   }, []);

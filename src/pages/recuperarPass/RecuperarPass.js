@@ -19,7 +19,7 @@ const RecuperarPass = () => {
     'Access-Control-Allow-Credentials': true,
     'Access-Control-Allow-Headers': '*',
   };
-  const apiURL = "https://localhost:44311";
+  const apiURL = "http://webtpi-001-site1.dtempurl.com";
 
 
   React.useEffect(() => {

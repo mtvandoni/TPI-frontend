@@ -19,7 +19,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import DeleteForeverRoundedIcon from '@mui/icons-material/DeleteForeverRounded';
 
 import session from '../../../services/session';
-const apiURL = 'https://localhost:44311';
+const apiURL = 'http://webtpi-001-site1.dtempurl.com';
 
 const ModalEquipoDelete = ({ equipo, handleEliminarEquipo}) => {
   const [open, setOpen] = React.useState(false);

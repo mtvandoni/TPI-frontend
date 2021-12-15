@@ -18,7 +18,7 @@ import {
  } from '@mui/material';
  import './miequipo.css';
 
- const apiURL = 'https://localhost:44311';
+ const apiURL = 'http://webtpi-001-site1.dtempurl.com';
  const headers = { 
   'Authorization': session().token,
   'Content-type': 'application/json; charset=iso-8859-1',
@@ -39,7 +39,7 @@ const MiEquipo = () => {
   React.useEffect(() => {
     const team = [];
     console.log(user);
-    axios.get(apiURL + '/api/proyecto', {headers})
+    /* axios.get(apiURL + '/api/proyecto', {headers})
         .then((response) => {
           if (response) {
             setProyecto(response.data);
@@ -61,9 +61,9 @@ const MiEquipo = () => {
               setMiInfo(normalizeInfo(team)[0]);
             });
           });
-        });
+        }); */
     axios.post(apiURL + `/api/equipopersona/recuperarintegrantes`,{idPersona: user.id}, {headers}).then((response) => {
-      setMiEquipo(response.data);
+      setMiEquipo(response.data.$values);
     })
   }, []);
 
@@ -73,11 +73,11 @@ const MiEquipo = () => {
     const equipoPersona = data[2];
     const info = [];
     if (data) {
-      const miEquipoPersona = equipoPersona.find(equipo => equipo.idPersona === user.id);
+      const miEquipoPersona = equipoPersona?.find(equipo => equipo.idPersona === user.id);
       if (miEquipoPersona) {
-        const miEquipo = equipo.find(x => x.idEquipo === miEquipoPersona.idEquipo);
+        const miEquipo = equipo?.find(x => x.idEquipo === miEquipoPersona.idEquipo);
         if (miEquipo) {
-          const miProyecto = proyecto.find(pro => pro.idProyecto === miEquipo.idProyecto);
+          const miProyecto = proyecto?.find(pro => pro.idProyecto === miEquipo.idProyecto);
           info.push(miProyecto);
         }
       }
@@ -136,10 +136,17 @@ const MiEquipo = () => {
             padding: '2em',
           }}
         >
-          <Chip label={"Mi Proyecto: " + miInfo?.nombre} color="primary" />
+          { miInfo?.nombre ?
+            <Chip label={"Mi Proyecto: " + miInfo.nombre} color="primary" /> :
+            <Chip label={"Mi Proyecto: Sin asignación"} color="primary" />
+          }  
+          
           <br />
           <br />
-          <Chip label={"Mi Equipo: " + miEquipo.map((persona) => persona.nombre)} color="primary" />
+          { miEquipo.lenght > 0 ?
+            <Chip label={"Mi Equipo: " + miEquipo?.map((persona) => persona.nombre)} color="primary" /> :
+            <Chip label={"Mi Equipo: Sin equipo asignado"} color="primary" />
+          }  
           <div
             style={{
               display: 'flex',

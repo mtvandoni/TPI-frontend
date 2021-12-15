@@ -6,7 +6,7 @@ import CardCustom from '../../components/card/Card';
 import Footer from '../../components/footer/Footer';
 
 import session from '../../services/session';
-const apiURL = 'https://localhost:44311';
+const apiURL = 'http://webtpi-001-site1.dtempurl.com';
 
 const Novedades = () => {
   const [novedades, setNovedades] = React.useState([]);
@@ -18,7 +18,7 @@ const Novedades = () => {
 
   React.useEffect(() => {
     axios.get(apiURL + '/api/novedad', {headers}).then((response) => {
-      setNovedades(response.data);
+      setNovedades(response.data.$values);
     });
   }, []);
 

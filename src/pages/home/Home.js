@@ -15,6 +15,7 @@ import { Typography,
   Grid,
   Button,
   Divider,
+  TextField
 } from '@mui/material';
 
 import AdjustRoundedIcon from '@mui/icons-material/AdjustRounded';
@@ -28,6 +29,7 @@ const Home = () => {
   const [proyectoFilter, setProyectoFilter] = React.useState([]);
   const [categorias, setCategorias] = React.useState([]);
   const [masVotados, setMasVotados] = React.useState([]);
+  const [searchField, setSearchField] = React.useState("");
 
   const headers = { 
     'Authorization': session().token,
@@ -36,22 +38,23 @@ const Home = () => {
     'Access-Control-Allow-Credentials': true,
     'Access-Control-Allow-Headers': '*',
   };
-  const apiURL = "https://localhost:44311";
+  const apiURL = "http://webtpi-001-site1.dtempurl.com";
 
   React.useEffect(() => { 
     axios.get(apiURL + "/api/proyecto", {headers})
       .then(response => {
-        setProyectoFilter(response.data);
-        setProyecto(response.data);
+        setProyectoFilter(response.data.$values);
+        setProyecto(response.data.$values);
           });
     axios.get(apiURL + "/api/categoria", {headers})
       .then(response => {
-        setCategorias(response.data);
+        console.log(response);
+        setCategorias(response.data.$values);
       });
 
     axios.get(apiURL + "/api/proyecto/masvotados", {headers}).then((response) => {
       console.log(response);
-      setMasVotados(response.data);
+      setMasVotados(response.data.$values);
     })
   }, [])
 
@@ -118,6 +121,18 @@ const Home = () => {
     }
   }; */
 
+ 
+
+  const searchProyects = (e) => {
+    e.preventDefault();
+    setSearchField(e.target.value);
+    const proyectosFiltered = proyecto.filter(pro => {
+      return (
+        pro?.nombreProyecto?.toLowerCase().includes(searchField?.toLowerCase())
+      );
+    });
+    setProyecto(proyectosFiltered); 
+  };
 
   return(
     <>
@@ -272,11 +287,11 @@ const Home = () => {
                     ))
                   }
                   <Grid
-                        item
-                        lg={4}
-                        md={6}
-                        xs={12}
-                      >
+                    item
+                    lg={4}
+                    md={6}
+                    xs={12}
+                  >
                     <Paper tabIndex="0" elevation={0} className="paperCategory" onClick={() => handleClickCategory()}>
                       <Typography
                         variant="subtitle2"
@@ -285,6 +300,13 @@ const Home = () => {
                         Todos
                       </Typography>
                     </Paper>
+                    {/* <div>
+                      <TextField
+                        label="Buscador"
+                        name="search"
+                        onChange={searchProyects}
+                      />
+                    </div> */}
                   </Grid>
                 </Grid>
               </Box>

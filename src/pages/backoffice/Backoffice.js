@@ -50,7 +50,7 @@ import {
   const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
   const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
  
- const apiURL = 'https://localhost:44311'; // "http://webtpi-001-site1.dtempurl.com"; // 'https://localhost:44311';
+ const apiURL = 'http://webtpi-001-site1.dtempurl.com'; // "http://webtpi-001-site1.dtempurl.com"; // 'https://localhost:44311';
  const headers = { 
   'Authorization': session().token,
   'Content-type': 'application/json; charset=iso-8859-1',
@@ -96,36 +96,37 @@ const Backoffice = ({auth}) => {
     });
 
     axios.get(apiURL + '/api/equipo/getequiposfull', {headers}).then((response) => {
-      console.log(response.data);
-      normalizeTeams2(response.data);
+      console.log(response);
+      normalizeTeams2(response.data.$values);
     })
 
     axios.get(apiURL + '/api/usuario', {headers})
       .then((response) => {
         const teams = [];
         if (response) {
-          setProfesores(normalizeUsuarios(response.data)[0]);
-          setAlumnos(normalizeUsuarios(response.data)[1]);
-          teams.push(normalizeUsuarios(response.data)[1]);
+          console.log(response.data.$values);
+          setProfesores(normalizeUsuarios(response.data.$values)[0]);
+          setAlumnos(normalizeUsuarios(response.data.$values)[1]);
+          teams.push(normalizeUsuarios(response.data.$values)[1]);
         }
         axios.get(apiURL + '/api/proyecto', {headers})
         .then((response) => {
           if (response) {
-            setProyectos(response.data);
-            teams.push(response.data);
+            setProyectos(response.data.$values);
+            teams.push(response.data.$values);
           }
           axios.get(apiURL + '/api/equipo', {headers})
             .then((response) => {
               if (response) {
-                setEquipos(response.data);
-                teams.push(response.data);
+                setEquipos(response.data.$values);
+                teams.push(response.data.$values);
               } 
           });
           axios.get(apiURL + '/api/equipopersona', {headers})
             .then((response) => {
               if (response) {
-                setEquipoPersona(response.data);
-                teams.push(response.data);
+                setEquipoPersona(response.data.$values);
+                teams.push(response.data.$values);
               }
             setRowsEquipos(normalizeTeams(teams));
           });
@@ -178,13 +179,13 @@ const Backoffice = ({auth}) => {
     const proyectos = data[1];
     const equipos = data[2];
     const equipoPersona = data[3];
-    console.log(proyectos);
+    console.log(data);
 
     const teams = [];
 
     const asdasd = [];
     alumnos.forEach((alumno) => {
-      const auxAlumno = equipoPersona.find(equiPer => equiPer.idPersona === alumno.id);
+      const auxAlumno = equipoPersona?.find(equiPer => equiPer.idPersona === alumno.id);
       if (alumno.id === auxAlumno?.idPersona) {
         const students = {
           nombre: alumno.nombre,
@@ -195,13 +196,13 @@ const Backoffice = ({auth}) => {
       }
     });
 
-    equipos.forEach((equipo) => {
+    equipos?.forEach((equipo) => {
       const proAux = proyectos.find(pro => pro.idProyecto === equipo.idProyecto);
       const team = {
         id: equipo.idEquipo ? equipo.idEquipo : '',
-        marca :proAux ? proAux.nombre : '',
+        nombreProyecto :proAux ? proAux.nombreProyecto : '',
         concepto: proAux ? proAux.descripcion : '',
-        valor: proAux ? proAux.propuestaValor : '',
+        propuestaValor: proAux ? proAux.propuestaValor : '',
         nombreEquipo: equipo.nombre ? equipo.nombre : '',
         alumnos: [],
         idProyecto: proAux ? proAux.idProyecto : '',
@@ -906,10 +907,9 @@ const Backoffice = ({auth}) => {
               element={<Button style={{ float: 'right' }} size="small" variant="contained" color="secondary">Exportar excel</Button>}
             >
               <ExcelSheet data={rowsEquipos} name="Equipos">
-                <ExcelColumn label="Marca" value="marca" />
+                <ExcelColumn label="Marca" value="nombreProyecto" />
                 <ExcelColumn label="Concepto" value="concepto" />
-                <ExcelColumn label="Propuesta de Valor" value="valor" />
-                <ExcelColumn label="Alumno" value="alumno" />
+                <ExcelColumn label="Propuesta de Valor" value="propuestaValor" />
               </ExcelSheet>
             </ExcelFile>
             <TableContainer component={Paper} style={{ marginTop: '3em' }}>
