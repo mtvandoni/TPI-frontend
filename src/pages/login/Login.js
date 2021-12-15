@@ -5,9 +5,11 @@ import {
   TextField,
   Box,
   Typography,
+  Link,
   Container
 } from '@mui/material';
 import {login} from '../../services/security';
+import '../login/login.css';
 
 const Login = () => {
   const [user, setUser] = React.useState(null);
@@ -17,13 +19,13 @@ const Login = () => {
     localStorage.setItem('auth', JSON.stringify(null));
   }, [])
 
+  const { search } = window.location;
+  const params = new URLSearchParams(search);
+  const redirect = params.get('callbackURL');
 
   function submitSession(event) {
     event.preventDefault();
 
-    const { search } = window.location;
-    const params = new URLSearchParams(search);
-    const redirect = params.get('callbackURL');
 
     login(event.target.email.value, event.target.password.value).then(() => {
       if (typeof window !== 'undefined') {
@@ -33,6 +35,13 @@ const Login = () => {
      console.log(error);
     });
   };
+
+  function recuperarPass(e) {
+    e.preventDefault();
+    if (typeof window !== 'undefined') {
+      window.location.href = redirect || '/recuperarPass';
+    }
+  }
 
   return(
     <Box
@@ -79,6 +88,16 @@ const Login = () => {
               Ingresar
             </Button>
           </Box>
+          <Box sx={{ py: 2, textAlign: 'center' }}>
+          <Button
+              type="submit"
+              color="primary"
+              onClick={recuperarPass}
+            >
+              ¿Ha olvidado su contraseña?
+            </Button>
+          </Box>
+          
         </form>
       </Container>
     </Box>

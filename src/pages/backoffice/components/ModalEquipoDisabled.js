@@ -6,12 +6,14 @@ import {
   DialogContent,
   DialogActions,
   DialogTitle,
-  IconButton } from '@mui/material';
+  IconButton,
+  Tooltip, } from '@mui/material';
 
 import CloseIcon from '@mui/icons-material/Close';
 
 
 import DoNotDisturbAltIcon from '@mui/icons-material/DoNotDisturbAlt';
+import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlineRounded';
 
 const ModalEquipoDisabled = ({ equipo, handleDeshabilitarEquipo}) => {
   const [open, setOpen] = React.useState(false);
@@ -64,7 +66,14 @@ const ModalEquipoDisabled = ({ equipo, handleDeshabilitarEquipo}) => {
   return (
     <div>
       <Button onClick={handleClickOpen} color="secondary">
-        <DoNotDisturbAltIcon color="error"/>
+      {equipo.estado === 'S' ?
+        <Tooltip title="Deshabilitar">
+          <DoNotDisturbAltIcon color="error"/>
+        </Tooltip> :
+        <Tooltip title="Habilitar">
+          <CheckCircleOutlineRoundedIcon color="success" />
+        </Tooltip>
+        }
       </Button>
       <BootstrapDialog
         onClose={handleClose}

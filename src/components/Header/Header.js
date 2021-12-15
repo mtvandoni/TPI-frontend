@@ -13,6 +13,7 @@ import Novedades from '../../pages/novedades/Novedades';
 import ExpoProyecto from '../../pages/expoproyecto/Expoproyecto';
 import Backoffice from '../../pages/backoffice/Backoffice';
 import MiEquipo from '../../pages/miEquipo/MiEquipo';
+import RecuperarPass from '../../pages/recuperarPass/RecuperarPass';
 import ExitToAppRoundedIcon from '@mui/icons-material/ExitToAppRounded';
 
 import './header.css';
@@ -37,9 +38,14 @@ const Header = () => {
   const [user, setUser] = React.useState(null);
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [recover, setRecover] = React.useState(null);
 
   React.useEffect(() => {
     setUser(session().data);
+    
+    if (window.location.pathname === '/recuperarPass') {
+      setRecover(true);
+    }
   }, []);
 
   const goLogin =() => {
@@ -198,9 +204,6 @@ const Header = () => {
       </Box>
 
       <Switch>
-         {/* } <Route path="/login">
-            <Login />
-          </Route> */}
           <Route path="/home">
             <Home />
           </Route>
@@ -215,6 +218,10 @@ const Header = () => {
           </Route>
           <Route path="/miequipo">
             <MiEquipo auth={user?.token} />
+          </Route>
+          {}
+          <Route path="/recuperarPass">
+            <RecuperarPass />
           </Route>
         </Switch>
     </Router>

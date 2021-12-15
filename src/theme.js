@@ -27,6 +27,7 @@ const theme = createTheme({
     text: {
       primary: '#232b2e',
       secondary: '#696F8C',
+      light: '#fff',
       chip: {
         blue: '#2952CC',
         orange: '#85462B'
